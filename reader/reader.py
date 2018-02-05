@@ -11,72 +11,93 @@ class readApkg:
             zp.extract('collection.anki2', '.')
 
         with sqlite3.connect(os.path.join('collection.anki2')) as conn:
-            cursor = conn.execute('SELECT models FROM col')
+            cursor = conn.execute('SELECT models, decks FROM col')
             self.models = []
-            for i, row in enumerate(cursor):
+            self.decks = []
+            for row in cursor:
                 models = json.loads(row[0])
-
-                for k,v in models.items():
+                for mid, v in models.items():
                     fieldnames = []
                     for flds in v['flds']:
                         fieldnames.append(flds['name'])
-                    model = {
-                        'mid': k,
+                    self.models.append({
+                        'id': mid,
                         'name': v['name'],
                         'fields': fieldnames
-                    }
-                self.models.append(model)
+                    })
 
-            self.notes = dict()
-            cursor = conn.execute('SELECT mid, flds FROM notes')
+                decks = json.loads(row[1])
+                for did, v in decks.items():
+                    self.decks.append({
+                        'id': did,
+                        'name': v['name']
+                    })
+
+            self.notes = []
+            cursor = conn.execute('SELECT id, mid, flds FROM notes')
             for row in cursor:
-                mid = str(row[0])
+                nid = str(row[0])
+                mid = str(row[1])
+                model_name = ''
+                model_number = -1
                 for model_number, model in enumerate(self.models):
-                    if model['mid'] == mid:
+                    if model['id'] == mid:
                         model_name = model['name']
                         break
 
                 content = dict()
-                for i, fieldcontent in enumerate(row[1].split('\x1f')):
+                for i, fieldcontent in enumerate(row[2].split('\x1f')):
                     content[self.models[model_number]['fields'][i]] = fieldcontent
 
-                if model_name not in self.notes.keys():
-                    self.notes[model_name] = [content]
-                else:
-                    self.notes[model_name] += [content]
+                self.notes.append({
+                    'id': nid,
+                    'model_name': model_name,
+                    'content': content
+                })
 
-            self.cards = dict()
-            cursor = conn.execute('SELECT mid, flds FROM notes')
+            self.cards = []
+            cursor = conn.execute('SELECT id, nid, did FROM cards')
             for row in cursor:
-                mid = str(row[0])
-                for model_number, model in enumerate(self.models):
-                    if model['mid'] == mid:
-                        model_name = model['name']
+                cid = str(row[0])
+                nid = str(row[1])
+                note_content = []
+                for note_number, note in enumerate(self.notes):
+                    if note['id'] == nid:
+                        note_content = note['content']
                         break
 
-                content = dict()
-                for i, fieldcontent in enumerate(row[1].split('\x1f')):
-                    content[self.models[model_number]['fields'][i]] = fieldcontent
+                did = str(row[2])
+                deck_name = ''
+                for deck in self.decks:
+                    if deck['id'] == did:
+                        deck_name = deck['name']
+                        break
 
-                if model_name not in self.data.keys():
-                    self.data[model_name] = [content]
-                else:
-                    self.data[model_name] += [content]
+                self.cards.append({
+                    'id': cid,
+                    'note_id': nid,
+                    'note_content': note_content,
+                    'deck_id': did,
+                    'deck_name': deck_name
+                })
 
         os.remove('collection.anki2')
 
     def findNote(self, params):
         result = dict()
         for k, v in params.items():
-            for model_name, records in self.notes.items():
-                for record in records:
-                    if record[k] == v:
-                        if model_name not in result.keys():
-                            result[model_name] = [record]
-                        else:
-                            result[model_name] += [record]
+            for note in self.notes:
+                model_name = note['model_name']
+                if note['content'][k] == v:
+                    if model_name not in result.keys():
+                        result[model_name] = [note['content']]
+                    else:
+                        result[model_name] += [note['content']]
 
         return result
+
+    def findCard(self, params):
+        pass
 
 
 if __name__ == '__main__':
