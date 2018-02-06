@@ -105,7 +105,7 @@ with edit.editApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.
                     })
 ```
 
-See also the [documentation](http://decks.wikia.com/wiki/Anki_APKG_format_documentation) here.
+See also the [*.apkg format documentation](http://decks.wikia.com/wiki/Anki_APKG_format_documentation) here.
 
 Model id, deck id, card id, and note id are Unix time in milliseconds.
 
