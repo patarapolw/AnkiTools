@@ -50,21 +50,22 @@ with edit.editApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.
                                ('Pinyin', 'Nǐ hǎo!xxxxx'),
                                ('Hanzi', '你好！xxxxx'),
                                ('Audio', '[sound:xxxxx.mp3]')]),
-      'model name': 'MarkAudioaaaaaaa'}]
+                   'model name': 'MarkAudioaaaaaaa'}]
     anki.updateHumanNotes(humanNotes)
     
     humanCards = [{'content': OrderedDict([('English', 'Hello!'),
                                ('Pinyin', 'Nǐ hǎo!'),
                                ('Hanzi', '你好！'),
                                ('Audio', '[sound:tmp1cctcn.mp3]')]),
-                  'deck name': 'SpoonFedChinese',
+                  'deck name': 'Chinese::SpoonFedChinese',
                   'model name': 'MarkAudio',
                   'template': 'Card M'},
                  {'content': OrderedDict([('English', 'Hello!'),
                                ('Pinyin', 'Nǐ hǎo!'),
                                ('Hanzi', '你好！'),
                                ('Audio', '[sound:tmp1cctcn.mp3]')]),
-                  'deck name': 'SpoonFedChinese',
+                  'deck name': 'Chinese::SpoonFedChinese',
                   'model name': 'MarkAudio-X',
                   'template': 'Card N'}]
     anki.updateHumanCards(humanCards)
+```
