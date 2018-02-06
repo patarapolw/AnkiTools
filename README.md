@@ -104,3 +104,9 @@ with edit.editApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.
                         'ord': order_in_list_of_template_names
                     })
 ```
+
+See also the [documentation](http://decks.wikia.com/wiki/Anki_APKG_format_documentation) here.
+
+Model id, deck id, card id, and note id are Unix time in milliseconds.
+
+Subdecks can be made by putting in `::`; for example, `Chinese::SpoonFedChinese`.
