@@ -101,5 +101,6 @@ ENV/
 .mypy_cache/
 
 # sample
-sample/
+apkg/
+anki2/
 temp/

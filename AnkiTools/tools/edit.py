@@ -4,13 +4,21 @@ import sqlite3
 import json
 import shutil
 
-from tools import const, create, read
+from AnkiTools.tools import const, read, create
 
 
 class editApkg:
     def __init__(self, path_to_file, output=''):
-        with zipfile.ZipFile(path_to_file, 'r') as zp:
-            zp.extractall(const.temp_dir)
+        extension = os.path.splitext(path_to_file)[1]
+        if extension == '.apkg':
+            with zipfile.ZipFile(path_to_file, 'r') as zp:
+                zp.extractall(const.temp_dir)
+            self.anki2 = os.path.join(const.temp_dir, const.database)
+        elif extension == '.anki2':
+            self.anki2 = path_to_file
+        else:
+            print('Error opening {}'.format(path_to_file))
+
         if output != '':
             self.output = output
         else:
@@ -31,13 +39,21 @@ class editApkg:
     def save(self, output=''):
         if output != '':
             self.output = output
-        with zipfile.ZipFile(self.output, 'w') as zp:
-            for root, dirs, files in os.walk(const.temp_dir):
-                for filename in files:
-                    zp.write(os.path.join(root, filename))
+
+        extension = os.path.splitext(output)[1]
+        if extension == '.apkg':
+            with zipfile.ZipFile(self.output, 'w') as zp:
+                for root, dirs, files in os.walk(const.temp_dir):
+                    for filename in files:
+                        zp.write(os.path.join(root, filename))
+        elif extension == '.anki2':
+            with zipfile.ZipFile(self.output, 'w') as zp:
+                zp.write(output)
+        else:
+            print('Error saving {}'.format(self.output))
 
     def updateModels(self, models):
-        with sqlite3.connect(const.database_path) as conn:
+        with sqlite3.connect(self.anki2) as conn:
             for model in models:
                 cursor = conn.execute('SELECT models FROM col')
                 editor = json.loads(list(cursor)[0][0])
@@ -59,7 +75,7 @@ class editApkg:
                 conn.execute('UPDATE col SET models=?', (full_model, ))
 
     def updateDecks(self, decks):
-        with sqlite3.connect(const.database_path) as conn:
+        with sqlite3.connect(self.anki2) as conn:
             for deck in decks:
                 cursor = conn.execute('SELECT decks FROM col')
                 editor = json.loads(list(cursor)[0][0])
@@ -72,7 +88,7 @@ class editApkg:
                 conn.execute('UPDATE col SET decks=?', (full_deck, ))
 
     def updateNotes(self, notes):
-        with sqlite3.connect(const.database_path) as conn:
+        with sqlite3.connect(self.anki2) as conn:
             for note in notes:
                 cursor = conn.execute('SELECT * FROM notes WHERE id=?', (note['nid'], ))
                 if cursor.fetchone() is None:
@@ -83,7 +99,7 @@ class editApkg:
 
 
     def updateCards(self, cards):
-        with sqlite3.connect(const.database_path) as conn:
+        with sqlite3.connect(self.anki2) as conn:
             for card in cards:
                 cursor = conn.execute('SELECT * FROM notes WHERE id=?', (card['id'],))
                 if cursor.fetchone() is None:

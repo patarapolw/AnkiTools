@@ -45,7 +45,7 @@ Currently, it is safer to edit in a machine-readable format, rather than human-r
 ```python
 from collections import OrderedDict
 
-with edit.editApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
+with edit.editApkg(os.path.join(apkg,'Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
     humanNotes = [{'content': OrderedDict([('English', 'Hello!xxxxx'),
                                ('Pinyin', 'Nǐ hǎo!xxxxx'),
                                ('Hanzi', '你好！xxxxx'),

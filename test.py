@@ -1,8 +1,8 @@
 import os
-from tools import edit
+from AnkiTools.tools import edit
 from collections import OrderedDict
 
-with edit.editApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
+with edit.editApkg(os.path.join('apkg', 'Chinese.apkg')) as anki:
     # anki.updateModels({
     #                     'mid': model_id,
     #                     'name': model_name,

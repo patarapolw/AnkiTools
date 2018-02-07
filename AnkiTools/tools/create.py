@@ -1,11 +1,10 @@
 from time import time
 from hashlib import sha1
-import string
-import random
 
-from tools import guid64
+from AnkiTools.tools import guid64
 
-def intTime(scale=1):
+
+def intTime(scale=1000):
     return str(int(time()*scale))
 
 
