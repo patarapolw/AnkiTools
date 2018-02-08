@@ -81,7 +81,7 @@ query = {
         'name': v['name'],
         'fields': fieldNames,
         'templates': templateNames
-    }
+    },
     'ord': card['ord'],
 }
 ```
