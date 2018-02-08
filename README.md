@@ -1,6 +1,6 @@
 # AnkiTools
 
-An Anki \*.apkg and \*.anki2 reader/editor to work with in Python.
+An Anki \*.apkg and \*.anki2 reader/editor to work with in Python. Also included a module on [AnkiConnect](https://github.com/FooSoft/anki-connect).
 
 ## Parsing \*.apkg and \*.anki2 in a human readable and easily manageable format.
 
@@ -125,3 +125,13 @@ with edit.editApkg('Chinese.apkg') as anki:
                               'ord': order_in_list_of_template_names,
                           })
 ```
+
+## AnkiConnect module
+
+```python
+from AnkiTools.AnkiConnect import POST
+
+POST('deckNames')
+```
+
+You can also specify `params=dict()` in POST.
