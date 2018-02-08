@@ -134,4 +134,4 @@ from AnkiTools.AnkiConnect import POST
 POST('deckNames')
 ```
 
-You can also specify `params=dict()` in POST.
+You can also specify `params=dict()` in POST. Version is set as `5` as per default. For what you can put in, please refer to [AnkiConnect](https://github.com/FooSoft/anki-connect).
