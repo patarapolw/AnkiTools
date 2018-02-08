@@ -66,8 +66,16 @@ Query format
 ```
 query = {
     'cid': card['cid'],
-    'note': self.nidToNote(card['nid']),
-    'deck': self.didToDeck(card['did']),
+    'note': {
+        'nid': nid,
+        'mid': mid,
+        'content': content,
+        'tags': tags
+    },
+    'deck': {
+        'did': did,
+        'name': v['name']
+    },
     'ord': card['ord'],
 }
 ```
