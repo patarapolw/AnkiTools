@@ -108,8 +108,8 @@ with edit.editApkg('Chinese.apkg') as anki:
     anki.updateNotes([{
                         'nid': note_id,
                         'mid': model_id,
-                        'content': list_of_field_contents.join('\x1f'),
-                        'tags': list_of_tags.join(' ')
+                        'content': list_of_field_contents,
+                        'tags': list_of_tags
                     }])
 
     anki.updateCards([{
@@ -123,8 +123,8 @@ with edit.editApkg('Chinese.apkg') as anki:
                               'note': {
                                            'nid': note_id,
                                            'mid': model_id,
-                                           'content': list_of_field_contents.join('\x1f'),
-                                           'tags': list_of_tags.join(' ')
+                                           'content': list_of_field_contents,
+                                           'tags': list_of_tags
                                        }
                               'deck': {
                                           'did': deck_id,
