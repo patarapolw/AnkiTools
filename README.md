@@ -38,10 +38,10 @@ note = {
     'tags': tags
 }
 card = {
+    'cid': cid,
     'nid': nid,
-    'mid': mid,
-    'content': content,
-    'tags': tags
+    'did': did,
+    'ord': ord
 }
 ```
 
