@@ -76,7 +76,7 @@ See also the \*.apkg format documentation from [Anki decks collaboration Wiki](h
 
 ## Editing a \*.apkg and \*.anki2 file without Anki
 
-It will also generate a new model/deck/note/card, if one doesn't exist.
+It will also generate a new model/deck/note/card, if one doesn't exist. The ID's are Unix timestamp in milliseconds.
 
 Subdecks can be made by putting in `::`; for example, `Chinese::SpoonFedChinese`.
 
