@@ -53,7 +53,7 @@ I also added searching with regex
 
 For searching cards, you will need querying, which take a little long to load, so I created a separate function `loadQuery()`.
 ```python
-    anki.loadQuery() # Takes around 90 seconds
+    anki.loadQuery() # Takes around 90 seconds to load
     params = {
         'type': type,
         'key': key,
@@ -110,4 +110,18 @@ with edit.editApkg('Chinese.apkg') as anki:
                         'did': deck_id,
                         'ord': order_in_list_of_template_names
                     })
+    anki.updateCardQueries({
+                              'cid': card_id,
+                              'note': {
+                                           'nid': note_id,
+                                           'mid': model_id,
+                                           'content': list_of_field_contents.join('\x1f'),
+                                           'tags': list_of_tags.join(' ')
+                                       }
+                              'deck': {
+                                          'did': deck_id,
+                                          'name': deck_name
+                                      }
+                              'ord': order_in_list_of_template_names,
+                          })
 ```
