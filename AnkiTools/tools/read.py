@@ -5,6 +5,7 @@ import json
 import pprint
 import shutil
 from collections import OrderedDict
+import re
 
 from AnkiTools.tools import const
 
@@ -42,15 +43,17 @@ class readAnki2:
                     })
 
             self.notes = []
-            cursor = conn.execute('SELECT id, mid, flds FROM notes')
+            cursor = conn.execute('SELECT id, mid, flds, tags FROM notes')
             for row in cursor:
                 nid = str(row[0])
                 mid = str(row[1])
                 content = row[2].split('\x1f')
+                tags = row[3].split(' ')
                 self.notes.append({
                     'nid': nid,
                     'mid': mid,
-                    'content': content
+                    'content': content,
+                    'tags': tags
                 })
 
             self.cards = []
@@ -66,6 +69,34 @@ class readAnki2:
                     'did': did,
                     'ord': ord
                 })
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+    def loadQuery(self):
+        self.cardQuery = []
+        for card in self.cards:
+            self.cardQuery.append({
+                'cid': card['cid'],
+                'note': self.nidToNote(card['nid']),
+                'deck': self.didToDeck(card['did']),
+                'ord': card['ord']
+            })
+
+    def nidToNote(self, nid):
+        for note in self.notes:
+            if nid == note['nid']:
+                return note
+        return dict()
+
+    def didToDeck(self, did):
+        for deck in self.decks:
+            if did == deck['did']:
+                return deck
+        return dict()
 
     def searchModelById(self, mid):
         for model in self.models:
@@ -150,6 +181,25 @@ class readAnki2:
                     results.append(result)
 
         return results
+
+    def getDecks(self, regex):
+        for deck in self.decks:
+            if re.match(regex, deck['name']) is not None:
+                yield deck
+
+    def getNotesByField(self, model_id, field_number, regex):
+        for note in self.notes:
+            if note['mid'] == model_id:
+                if re.match(regex, note['content'][field_number]) is not None:
+                    yield note
+
+    def getCardQuery(self, regex, params):
+        for cardQuery in self.cardQuery:
+            query = cardQuery[params['type']][params['key']]
+            if type(query) is list:
+                query = cardQuery[params['type']][params['key']][params['i']]
+            if re.match(regex, query) is not None:
+                yield cardQuery
 
 
 class readApkg(readAnki2):

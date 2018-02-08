@@ -7,50 +7,15 @@ import shutil
 from AnkiTools.tools import const, read, create
 
 
-class editApkg:
+class editAnki2:
     def __init__(self, path_to_file, output=''):
-        extension = os.path.splitext(path_to_file)[1]
-        if extension == '.apkg':
-            with zipfile.ZipFile(path_to_file, 'r') as zp:
-                zp.extractall(const.temp_dir)
-            self.anki2 = os.path.join(const.temp_dir, const.database)
-        elif extension == '.anki2':
-            self.anki2 = path_to_file
-        else:
-            print('Error opening {}'.format(path_to_file))
-
         if output != '':
             self.output = output
         else:
             self.output = path_to_file
 
-        self.db = read.readApkg(path_to_file)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
-
-    def close(self):
-        self.save()
-        shutil.rmtree(const.temp_dir)
-
-    def save(self, output=''):
-        if output != '':
-            self.output = output
-
-        extension = os.path.splitext(output)[1]
-        if extension == '.apkg':
-            with zipfile.ZipFile(self.output, 'w') as zp:
-                for root, dirs, files in os.walk(const.temp_dir):
-                    for filename in files:
-                        zp.write(os.path.join(root, filename))
-        elif extension == '.anki2':
-            with zipfile.ZipFile(self.output, 'w') as zp:
-                zp.write(output)
-        else:
-            print('Error saving {}'.format(self.output))
+        self.anki2 = path_to_file
+        self.db = read.readAnki2(path_to_file)
 
     def updateModels(self, models):
         with sqlite3.connect(self.anki2) as conn:
@@ -178,3 +143,36 @@ class editApkg:
             if model['mid'] == mid:
                 return model['name']
         return ''
+
+    def export(self, output=''):
+        if output == '':
+            output = os.path.splitext(self.output)[0] + '.apkg'
+        with zipfile.ZipFile(output, 'w') as zp:
+            zp.write(self.anki2)
+
+
+class editApkg(editAnki2):
+    def __init__(self, path_to_file, output=''):
+        with zipfile.ZipFile(path_to_file, 'r') as zp:
+            zp.extractall(const.temp_dir)
+        self.path_to_file = os.path.join(const.temp_dir, const.database)
+
+        super().__init__(self.path_to_file, output)
+
+    def close(self, output=''):
+        self.save()
+        shutil.rmtree(const.temp_dir)
+
+    def save(self, output=''):
+        if output == '':
+            output = self.path_to_file
+        with zipfile.ZipFile(self.output, 'w') as zp:
+            for root, dirs, files in os.walk(const.temp_dir):
+                for filename in files:
+                    zp.write(os.path.join(root, filename))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
