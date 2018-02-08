@@ -1,112 +1,154 @@
 # AnkiTools
 
-An Anki *.apkg reader/editor to work with in Python.
+An Anki \*.apkg and \*.anki2 reader/editor to work with in Python. Also included a module on [AnkiConnect](https://github.com/FooSoft/anki-connect).
 
-## Parsing in a human readable and easily manageable format.
-
-```python
-from AnkiTools.tools import read, edit
-import os
-
-with read.readApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
-    print(anki.findNotes('Pinyin','Nǐ hǎo!'))
-    print()
-    print(anki.findCards('Pinyin','Nǐ hǎo!'))
-```
-
-Result:-
-```
-[{'content': OrderedDict([('English', 'Hello!'),
-               ('Pinyin', 'Nǐ hǎo!'),
-               ('Hanzi', '你好！'),
-               ('Audio', '[sound:tmp1cctcn.mp3]')]),
-  'model name': 'MarkAudio-787e4'}]
-
-[{'content': OrderedDict([('English', 'Hello!'),
-               ('Pinyin', 'Nǐ hǎo!'),
-               ('Hanzi', '你好！'),
-               ('Audio', '[sound:tmp1cctcn.mp3]')]),
-  'deck name': 'SpoonFedChinese',
-  'model name': 'MarkAudio-787e4',
-  'template': 'Card 1'},
- {'content': OrderedDict([('English', 'Hello!'),
-               ('Pinyin', 'Nǐ hǎo!'),
-               ('Hanzi', '你好！'),
-               ('Audio', '[sound:tmp1cctcn.mp3]')]),
-  'deck name': 'SpoonFedChinese',
-  'model name': 'MarkAudio-787e4',
-  'template': 'Card 2'}]
-```
-
-## Editing a *.apkg file without Anki
-
-Currently, it is safer to edit in a machine-readable format, rather than human-readable, but I try to create a human-oriented one.
+## Parsing \*.apkg and \*.anki2 in a human readable and easily manageable format.
 
 ```python
-from collections import OrderedDict
+from AnkiTools.tools.read import readApkg
 
-with edit.editApkg(os.path.join(apkg,'Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
-    humanNotes = [{'content': OrderedDict([('English', 'Hello!xxxxx'),
-                               ('Pinyin', 'Nǐ hǎo!xxxxx'),
-                               ('Hanzi', '你好！xxxxx'),
-                               ('Audio', '[sound:xxxxx.mp3]')]),
-                   'model name': 'MarkAudioaaaaaaa'}]
-    anki.updateHumanNotes(humanNotes)
-    
-    humanCards = [{'content': OrderedDict([('English', 'Hello!'),
-                               ('Pinyin', 'Nǐ hǎo!'),
-                               ('Hanzi', '你好！'),
-                               ('Audio', '[sound:tmp1cctcn.mp3]')]),
-                  'deck name': 'Chinese::SpoonFedChinese',
-                  'model name': 'MarkAudio',
-                  'template': 'Card M'},
-                 {'content': OrderedDict([('English', 'Hello!'),
-                               ('Pinyin', 'Nǐ hǎo!'),
-                               ('Hanzi', '你好！'),
-                               ('Audio', '[sound:tmp1cctcn.mp3]')]),
-                  'deck name': 'Chinese::SpoonFedChinese',
-                  'model name': 'MarkAudio-X',
-                  'template': 'Card N'}]
-    anki.updateHumanCards(humanCards)
+with readApkg('Chinese.apkg')) as anki:
+    anki.midToModel('xxxxxxx')
+    anki.didToDeck('xxxxxxx')
+    anki.nidToNote('xxxxxxx')
+    anki.cidToCard('xxxxxxx')
+
+Also,
+
+with readAnki2('collection.anki2')) as anki:
+    ...
 ```
 
-Although, you can always use below, which is much safer (for now).
+Result formats
+```
+model = {
+    'mid': mid,
+    'name': v['name'],
+    'fields': fieldNames,
+    'templates': templateNames
+}
+deck = {
+    'did': did,
+    'name': v['name']
+}
+note = {
+    'nid': nid,
+    'mid': mid,
+    'content': content,
+    'tags': tags
+}
+card = {
+    'cid': cid,
+    'nid': nid,
+    'did': did,
+    'ord': ord
+}
+```
+
+I also added searching with regex
+```python
+    anki.getDecks('^Chinese::Hanzi')
+    anki.getNotesByField(model_id, field_number, regex)
+```
+
+For searching cards, you will need querying, which take a little long to load, so I created a separate function `loadQuery()`.
+```python
+    anki.loadQuery() # Takes around 90 seconds to load
+    params = {
+        'type': type,
+        'key': key,
+        'i': field_number or something_of_that_sort
+    }
+    anki.getCardQuery(regex, params)
+```
+
+Query format
+```
+query = {
+    'cid': card['cid'],
+    'note': {
+        'nid': nid,
+        'mid': mid,
+        'content': content,
+        'tags': tags
+    },
+    'deck': {
+        'did': did,
+        'name': v['name']
+    },
+    'ord': card['ord'],
+}
+```
+
+See also the \*.apkg format documentation from [Anki decks collaboration Wiki](http://decks.wikia.com/wiki/Anki_APKG_format_documentation) and [AnkiDroid](https://github.com/ankidroid/Anki-Android/wiki/Database-Structure)
+
+## Editing a \*.apkg and \*.anki2 file without Anki
+
+It will also generate a new model/deck/note/card, if one doesn't exist. The ID's are Unix timestamp in milliseconds.
+
+Subdecks can be made by putting in `::`; for example, `Chinese::SpoonFedChinese`.
 
 ```python
-import os
-from AnkiTools.tools import edit
-from collections import OrderedDict
+from AnkiTools.tools.edit import editApkg
 
-with edit.editApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
-    anki.updateModels({
+with edit.editApkg('Chinese.apkg') as anki:
+    anki.updateModels([{
                         'mid': model_id,
                         'name': model_name,
                         'fields': list_of_field_names,
                         'templates': list_of_template_names
 
-                    })
+                    }])
 
-    anki.updateDecks({
+    anki.updateDecks([{
                         'did': deck_id,
                         'name': deck_name
-                    })
+                    }])
 
-    anki.updateNotes({
+    anki.updateNotes([{
                         'nid': note_id,
                         'mid': model_id,
-                        'content': list_of_field_contents.join('\x1f')
-                    })
+                        'content': list_of_field_contents,
+                        'tags': list_of_tags
+                    }])
 
-    anki.updateCards({
+    anki.updateCards([{
                         'cid': card_id,
                         'nid': note_id,
                         'did': deck_id,
                         'ord': order_in_list_of_template_names
-                    })
+                    }])
+    anki.updateCardQueries([{
+                              'cid': card_id,
+                              'note': {
+                                           'nid': note_id,
+                                           'mid': model_id,
+                                           'content': list_of_field_contents,
+                                           'tags': list_of_tags
+                                       }
+                              'deck': {
+                                          'did': deck_id,
+                                          'name': deck_name
+                                      }
+                              'ord': order_in_list_of_template_names,
+                          }])
 ```
 
-See also the \*.apkg format documentation from [Anki decks collaboration Wiki](http://decks.wikia.com/wiki/Anki_APKG_format_documentation) and [AnkiDroid](https://github.com/ankidroid/Anki-Android/wiki/Database-Structure)
+## Exporting \*.anki2
 
-Model id, deck id, card id, and note id are Unix time in milliseconds.
+```python
+from AnkiTools.tools.edit import editAnki2
 
-Subdecks can be made by putting in `::`; for example, `Chinese::SpoonFedChinese`.
+with edit.editAnki2('Chinese.anki2') as anki:
+    anki.export()
+```
+
+## AnkiConnect module
+
+```python
+from AnkiTools.AnkiConnect import POST
+
+POST('deckNames')
+```
+
+You can also specify `params=dict()` in POST. Version is set as `5` as per default. For what you can put in, please refer to [AnkiConnect](https://github.com/FooSoft/anki-connect).
