@@ -134,6 +134,15 @@ with edit.editApkg('Chinese.apkg') as anki:
                           }])
 ```
 
+## Exporting \*.anki2
+
+```python
+from AnkiTools.tools.edit import editAnki2
+
+with edit.editAnki2('Chinese.anki2') as anki:
+    anki.export()
+```
+
 ## AnkiConnect module
 
 ```python
