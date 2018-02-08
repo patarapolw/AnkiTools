@@ -93,7 +93,7 @@ from AnkiTools.tools.edit import editApkg
 
 with edit.editApkg('Chinese.apkg') as anki:
     anki.updateModels([{
-                        'mid': model_id,
+                        'mid': model_id,  # May be left out
                         'name': model_name,
                         'fields': list_of_field_names,
                         'templates': list_of_template_names
@@ -101,35 +101,41 @@ with edit.editApkg('Chinese.apkg') as anki:
                     }])
 
     anki.updateDecks([{
-                        'did': deck_id,
+                        'did': deck_id,  # May be left out
                         'name': deck_name
                     }])
 
     anki.updateNotes([{
-                        'nid': note_id,
+                        'nid': note_id,  # May be left out
                         'mid': model_id,
                         'content': list_of_field_contents,
                         'tags': list_of_tags
                     }])
 
     anki.updateCards([{
-                        'cid': card_id,
+                        'cid': card_id,  # May be left out
                         'nid': note_id,
                         'did': deck_id,
                         'ord': order_in_list_of_template_names
                     }])
     anki.updateCardQueries([{
-                              'cid': card_id,
+                              'cid': card_id,  # May be left out
                               'note': {
-                                           'nid': note_id,
-                                           'mid': model_id,
+                                           'nid': note_id,  # May be left out
+                                           'mid': model_id,  # May be left out
                                            'content': list_of_field_contents,
                                            'tags': list_of_tags
                                        }
                               'deck': {
-                                          'did': deck_id,
+                                          'did': deck_id,  # May be left out
                                           'name': deck_name
                                       }
+                              'model': {
+                                           'mid': mid,  # May be left out
+                                           'name': v['name'],
+                                           'fields': fieldNames,
+                                           'templates': templateNames
+                                       }
                               'ord': order_in_list_of_template_names,
                           }])
 ```
