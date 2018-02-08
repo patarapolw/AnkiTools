@@ -79,12 +79,13 @@ class readAnki2:
     def loadQuery(self):
         self.cardQuery = []
         for card in self.cards:
-            self.cardQuery.append({
+            query = {
                 'cid': card['cid'],
                 'note': self.nidToNote(card['nid']),
                 'deck': self.didToDeck(card['did']),
-                'ord': card['ord']
-            })
+                'ord': card['ord'],
+            }
+            self.cardQuery.append(query)
 
     def nidToNote(self, nid):
         for note in self.notes:
@@ -98,89 +99,21 @@ class readAnki2:
                 return deck
         return dict()
 
-    def searchModelById(self, mid):
+    def midToModel(self, mid):
         for model in self.models:
             if model['mid'] == mid:
                 return model
         return dict()
 
-    def searchFieldIdByMid(self, mid, fieldName):
-        model = self.searchModelById(mid)
-        return model['fields'].index(fieldName)
-
-    def searchDeckById(self, did):
-        for deck in self.decks:
-            if deck['did'] == did:
-                return deck
-        return dict()
-
-    def searchNoteById(self, nid):
-        for note in self.notes:
-            if note['nid'] == nid:
-                return note
-        return dict()
-
-    def searchCardById(self, cid):
+    def cidToCard(self, cid):
         for card in self.cards:
             if card['cid'] == cid:
                 return card
         return dict()
 
-    def findNotes(self, fieldName, value):
-        results = []
-        for note in self.notes:
-            fieldId = self.searchFieldIdByMid(note['mid'], fieldName)
-            if fieldId != -1:
-                if note['content'][fieldId] == value:
-                    result = {
-                        'model name': '',
-                        'content': OrderedDict(),
-                    }
-
-                    model = self.searchModelById(note['mid'])
-                    result['model name'] = model['name']
-
-                    fields = model['fields']
-                    note = self.searchNoteById(note['nid'])
-                    data = note['content']
-                    for i, field in enumerate(fields):
-                        result['content'][field] = data[i]
-
-                    results.append(result)
-
-        return results
-
-    def findCards(self, fieldName, value):
-        results = []
-        for card in self.cards:
-            note = self.searchNoteById(card['nid'])
-            fieldId = self.searchFieldIdByMid(note['mid'], fieldName)
-            if fieldId != -1:
-                note = self.searchNoteById(card['nid'])
-                if note['content'][fieldId] == value:
-                    result = {
-                        'deck name': '',
-                        'model name': '',
-                        'template': '',
-                        'content': OrderedDict(),
-                    }
-
-                    deck = self.searchDeckById(card['did'])
-                    result['deck name'] = deck['name']
-
-                    model = self.searchModelById(note['mid'])
-                    result['model name'] = model['name']
-
-                    result['template'] = model['templates'][card['ord']]
-
-                    fields = model['fields']
-                    data = note['content']
-                    for i, field in enumerate(fields):
-                        result['content'][field] = data[i]
-
-                    results.append(result)
-
-        return results
+    def searchFieldIdByMid(self, mid, fieldName):
+        model = self.midToModel(mid)
+        return model['fields'].index(fieldName)
 
     def getDecks(self, regex):
         for deck in self.decks:
@@ -221,8 +154,4 @@ class readApkg(readAnki2):
 
 
 if __name__ == '__main__':
-    os.chdir('..')
-
-    with readApkg(os.path.join('apkg','Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
-        print(pprint.pformat(anki.findNotes('Pinyin','Nǐ hǎo!')))
-        print(pprint.pformat(anki.findCards('Pinyin', 'Nǐ hǎo!')))
+    pass

@@ -10,7 +10,7 @@ def POST(action, version=5, params={}):
     })
 
     r = requests.post('http://127.0.0.1:8765', data=to_send)
-    return json.loads(r.text)['result']
+    return json.loads(r.text)
 
 
 if __name__ == '__main__':

@@ -59,9 +59,9 @@ class editAnki2:
                 if cursor.fetchone() is None:
                     conn.executemany('INSERT INTO notes VALUES (?)', create.newNote(note))
                 else:
-                    conn.execute('UPDATE notes SET mid=?, flds=? WHERE id=?',
-                                 (note['mid'], note['content'].join('\x1f'), note['nid']))
-
+                    conn.execute('UPDATE notes SET mid=?, flds=?, tags=? WHERE id=?',
+                                 (note['mid'], note['content'].join('\x1f'), note['tags'].join(' '),
+                                  note['nid']))
 
     def updateCards(self, cards):
         with sqlite3.connect(self.anki2) as conn:
@@ -73,76 +73,16 @@ class editAnki2:
                     conn.execute('UPDATE cards SET nid=?, did=?, ord=? WHERE id=?',
                                  (card['nid'], card['did'], card['ord'], card['cid']))
 
-    def updateHumanNotes(self, humanNotes):
-        for humanNote in humanNotes:
-            model_name = humanNote['model name']
-            fields, data = self.contentToFieldsAndData(humanNote['content'])
-
-            mid = self.checkModels(model_name, fields)
-            self.checkNotes(mid, fields, data)
-
-    def updateHumanCards(self, humanCards):
-        for humanCard in humanCards:
-            deck_name = humanCard['deck name']
-            model_name = humanCard['model name']
-            template_name = humanCard['template']
-            fields, data = self.contentToFieldsAndData(humanCard['content'])
-
-            mid = self.checkModels(model_name, fields, template_name)
-            self.checkNotes(mid, fields, data, template_name)
-
-    def inPreExistingData(self, mid, data):
-        for note in self.db.notes:
-            if note['mid'] == mid:
-                note['content'] = data
-                return True
-        return False
-
-    @staticmethod
-    def contentToFieldsAndData(content):
-        fields = []
-        data = []
-        for field, datum in content.items():
-            fields.append(field)
-            data.append(datum)
-
-        return fields, data
-
-    def checkModels(self, model_name, fields, templateName=''):
-        for dbModel in self.db.models:
-            if dbModel['name'] == model_name:
-                mid = dbModel['mid']
-                return mid
-
-        mid = create.intTime(1000)
-        if templateName == '':
-            templateName = 'Card1'
-        self.db.models.append({
-            'mid': mid,
-            'name': model_name,
-            'fields': fields,
-            'templates': [templateName]
-        })
-
-        return mid
-
-    def checkNotes(self, mid, fields, data, templateName='Card1'):
-        if mid == None:
-            mid = create.intTime(1000)
-        if not self.inPreExistingData(mid, data):
-            self.checkModels(self.midToModelName(mid), fields, templateName)
-            self.db.notes.append({
-                'nid': create.intTime(),
-                'mid': mid,
-                'contents': data
-            })
-
-    def midToModelName(self, mid):
-        for model in self.db.models:
-            print(model)
-            if model['mid'] == mid:
-                return model['name']
-        return ''
+    def updateCardQueries(self, cardQueries):
+        with sqlite3.connect(self.anki2) as conn:
+            for cardQuery in cardQueries:
+                note = cardQuery.pop('note')
+                deck = cardQuery.pop('deck')
+                cardQuery['nid'] = note['nid']
+                cardQuery['did'] = deck['did']
+                self.updateNotes([note])
+                self.updateDecks([deck])
+                self.updateCards([cardQuery])
 
     def export(self, output=''):
         if output == '':
