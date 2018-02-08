@@ -76,6 +76,12 @@ query = {
         'did': did,
         'name': v['name']
     },
+    'model': {
+        'mid': mid,
+        'name': v['name'],
+        'fields': fieldNames,
+        'templates': templateNames
+    }
     'ord': card['ord'],
 }
 ```
