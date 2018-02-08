@@ -5,7 +5,7 @@ An Anki *.apkg reader/editor to work with in Python.
 ## Parsing in a human readable and easily manageable format.
 
 ```python
-from tools import read, edit
+from AnkiTools.tools import read, edit
 import os
 
 with read.readApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
@@ -74,7 +74,7 @@ Although, you can always use below, which is much safer (for now).
 
 ```python
 import os
-from tools import edit
+from AnkiTools.tools import edit
 from collections import OrderedDict
 
 with edit.editApkg(os.path.join('sample','Chinese_Sentences_and_audio_spoon_fed.apkg')) as anki:
