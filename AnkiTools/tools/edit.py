@@ -19,38 +19,39 @@ class editAnki2:
 
     def updateModels(self, models):
         with sqlite3.connect(self.anki2) as conn:
+            cursor = conn.execute('SELECT models FROM col')
+            editor = json.loads(list(cursor)[0][0])
             for model in models:
-                cursor = conn.execute('SELECT models FROM col')
-                editor = json.loads(list(cursor)[0][0])
-                editor[models['mid']]['name'] = model['name']
+                try:
+                    editor[model['mid']]['name'] = model['name']
+                    for i, field in enumerate(model['fields']):
+                        try:
+                            editor[model['mid']]['flds'][i]['name'] = field
+                        except IndexError:
+                            editor[model['mid']]['flds'].append(create.newField(field))
+                    for i, template in enumerate(model['templates']):
+                        try:
+                            editor[model['mid']]['tmpls'][i]['name'] = template
+                        except IndexError:
+                            editor[model['mid']]['tmpls'].append(create.newTemplate(template))
+                except KeyError:
+                    editor[model['mid']] = create.newModel(model)
 
-                for i, field in enumerate(model['fields']):
-                    try:
-                        editor[models['mid']]['flds'][i]['name'] = field
-                    except KeyError:
-                        editor[models['mid']] = create.newModel(model)
-
-                for i, template in enumerate(model['templates']):
-                    try:
-                        editor[models['mid']]['tmpls'][i]['name'] = template
-                    except KeyError:
-                        editor[models['mid']] = create.newModel(model)
-
-                full_model = json.dumps(editor)
-                conn.execute('UPDATE col SET models=?', (full_model, ))
+            full_models = json.dumps(editor)
+            conn.execute('UPDATE col SET models=?', (full_models, ))
 
     def updateDecks(self, decks):
         with sqlite3.connect(self.anki2) as conn:
+            cursor = conn.execute('SELECT decks FROM col')
+            editor = json.loads(list(cursor)[0][0])
             for deck in decks:
-                cursor = conn.execute('SELECT decks FROM col')
-                editor = json.loads(list(cursor)[0][0])
                 try:
                     editor[deck['did']]['name'] = deck['name']
                 except KeyError:
                     editor[deck['did']] = create.newDeck(deck)
 
-                full_deck = json.dumps(editor)
-                conn.execute('UPDATE col SET decks=?', (full_deck, ))
+            full_decks = json.dumps(editor)
+            conn.execute('UPDATE col SET decks=?', (full_decks, ))
 
     def updateNotes(self, notes):
         with sqlite3.connect(self.anki2) as conn:
@@ -106,7 +107,7 @@ class editApkg(editAnki2):
     def save(self, output=''):
         if output == '':
             output = self.path_to_file
-        with zipfile.ZipFile(self.output, 'w') as zp:
+        with zipfile.ZipFile(output, 'w') as zp:
             for root, dirs, files in os.walk(const.temp_dir):
                 for filename in files:
                     zp.write(os.path.join(root, filename))

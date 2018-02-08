@@ -9,29 +9,6 @@ def intTime(scale=1000):
 
 
 def newModel(model):
-    flds = []
-    for field in model['fields']:
-        flds.append({
-            "name":field,
-            "rtl":False,
-            "sticky":False,
-            "media":[],
-            "ord":0,
-            "font":"Arial",
-            "size":12
-        })
-
-    tmpls = []
-    for template in model['templates']:
-        tmpls.append({
-            "name":template,
-            "qfmt":"{{Front}}",
-            "did":None,
-            "bafmt":"",
-            "afmt":"{{FrontSide}}\n\n<hr id=answer/>\n\n{{Back}}",
-            "ord":0,
-            "bqfmt":""
-        })
 
     result = {
         model['mid']:{
@@ -41,12 +18,12 @@ def newModel(model):
             "did": None, ### deck id
             "usn":-1,
             "req":[[0, "all",[0]]],
-            "flds": flds,
+            "flds": newFields(model['fields']),
             "sortf":0,
             "latexPre":"\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\
                 \n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\
                 \\parindent}{0in}\n\\begin{document}\n",
-            "tmpls":tmpls,
+            "tmpls":newTemplates(model['templates']),
             "latexPost":"\\end{document}",
             "type":0,
             "id":model['mid'],
@@ -57,6 +34,44 @@ def newModel(model):
     }
 
     return result
+
+
+def newFields(fields):
+    flds = []
+    for field in fields:
+        flds.append(newField(field))
+    return flds
+
+
+def newField(field):
+    return {
+            "name": field,
+            "rtl": False,
+            "sticky": False,
+            "media": [],
+            "ord": 0,
+            "font": "Arial",
+            "size": 12
+        }
+
+
+def newTemplates(templates):
+    tmpls = []
+    for template in templates:
+        tmpls.append(newTemplate(template))
+    return tmpls
+
+
+def newTemplate(template):
+    return {
+            "name": template,
+            "qfmt": "{{Front}}",
+            "did": None,
+            "bafmt": "",
+            "afmt": "{{FrontSide}}\n\n<hr id=answer/>\n\n{{Back}}",
+            "ord": 0,
+            "bqfmt": ""
+        }
 
 
 def newDeck(deck):
