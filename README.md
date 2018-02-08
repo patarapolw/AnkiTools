@@ -84,33 +84,33 @@ Subdecks can be made by putting in `::`; for example, `Chinese::SpoonFedChinese`
 from AnkiTools.tools.edit import editApkg
 
 with edit.editApkg('Chinese.apkg') as anki:
-    anki.updateModels({
+    anki.updateModels([{
                         'mid': model_id,
                         'name': model_name,
                         'fields': list_of_field_names,
                         'templates': list_of_template_names
 
-                    })
+                    }])
 
-    anki.updateDecks({
+    anki.updateDecks([{
                         'did': deck_id,
                         'name': deck_name
-                    })
+                    }])
 
-    anki.updateNotes({
+    anki.updateNotes([{
                         'nid': note_id,
                         'mid': model_id,
                         'content': list_of_field_contents.join('\x1f'),
                         'tags': list_of_tags.join(' ')
-                    })
+                    }])
 
-    anki.updateCards({
+    anki.updateCards([{
                         'cid': card_id,
                         'nid': note_id,
                         'did': deck_id,
                         'ord': order_in_list_of_template_names
-                    })
-    anki.updateCardQueries({
+                    }])
+    anki.updateCardQueries([{
                               'cid': card_id,
                               'note': {
                                            'nid': note_id,
@@ -123,7 +123,7 @@ with edit.editApkg('Chinese.apkg') as anki:
                                           'name': deck_name
                                       }
                               'ord': order_in_list_of_template_names,
-                          })
+                          }])
 ```
 
 ## AnkiConnect module
