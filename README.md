@@ -140,7 +140,7 @@ with edit.editApkg('Chinese.apkg') as anki:
                           }])
 ```
 
-## Exporting \*.anki2
+## Exporting \*.anki2 to \*.apkg
 
 ```python
 from AnkiTools.tools.edit import editAnki2
