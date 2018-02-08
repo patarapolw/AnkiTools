@@ -22,6 +22,7 @@ class editAnki2:
             cursor = conn.execute('SELECT models FROM col')
             editor = json.loads(list(cursor)[0][0])
             for model in models:
+                model.setdefault('mid', create.intTime(1000))
                 try:
                     editor[model['mid']]['name'] = model['name']
                     for i, field in enumerate(model['fields']):
@@ -45,6 +46,7 @@ class editAnki2:
             cursor = conn.execute('SELECT decks FROM col')
             editor = json.loads(list(cursor)[0][0])
             for deck in decks:
+                deck.setdefault('did', create.intTime(1000))
                 try:
                     editor[deck['did']]['name'] = deck['name']
                 except KeyError:
@@ -56,6 +58,8 @@ class editAnki2:
     def updateNotes(self, notes):
         with sqlite3.connect(self.anki2) as conn:
             for note in notes:
+                note.setdefault('nid', create.intTime(1000))
+                # mid must be supplied, otherwise, use updateCardQueries
                 cursor = conn.execute('SELECT * FROM notes WHERE id=?', (note['nid'], ))
                 if cursor.fetchone() is None:
                     conn.executemany('INSERT INTO notes VALUES (?)', create.newNote(note))
@@ -67,6 +71,9 @@ class editAnki2:
     def updateCards(self, cards):
         with sqlite3.connect(self.anki2) as conn:
             for card in cards:
+                card.setdefault('cid', create.intTime(1000))
+                card.setdefault('ord', 0)
+                # nid, did must be supplied, otherwise, use updateCardQueries
                 cursor = conn.execute('SELECT * FROM notes WHERE id=?', (card['id'],))
                 if cursor.fetchone() is None:
                     conn.executemany('INSERT INTO notes VALUES (?)', create.newCard(card))
@@ -79,10 +86,19 @@ class editAnki2:
             for cardQuery in cardQueries:
                 note = cardQuery.pop('note')
                 deck = cardQuery.pop('deck')
+                model = cardQuery.pop('model')
+
+                note.setdefault('nid', create.intTime(1000))
                 cardQuery['nid'] = note['nid']
+                deck.setdefault('did', create.intTime(1000))
                 cardQuery['did'] = deck['did']
+
+                model.setdefault('mid', create.intTime(1000))
+                note['mid'] = model['mid']
+
                 self.updateNotes([note])
                 self.updateDecks([deck])
+                self.updateModels([model])
                 self.updateCards([cardQuery])
 
     def export(self, output=''):

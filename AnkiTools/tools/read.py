@@ -85,6 +85,7 @@ class readAnki2:
                 'deck': self.didToDeck(card['did']),
                 'ord': card['ord'],
             }
+            query['model'] = self.midToModel(query['note']['mid'])
             self.cardQuery.append(query)
 
     def nidToNote(self, nid):
