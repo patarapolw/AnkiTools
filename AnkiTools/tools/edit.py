@@ -104,8 +104,15 @@ class editAnki2:
     def export(self, output=''):
         if output == '':
             output = os.path.splitext(self.output)[0] + '.apkg'
-        with zipfile.ZipFile(output, 'w') as zp:
-            zp.write(self.anki2)
+
+        if not os.path.exists(const.database):
+            shutil.copy2(self.anki2, const.database)
+            with zipfile.ZipFile(output, 'w') as zp:
+                zp.write(const.database)
+            os.unlink(const.database)
+        else:
+            with zipfile.ZipFile(output, 'w') as zp:
+                zp.write(const.database)
 
 
 class editApkg(editAnki2):
