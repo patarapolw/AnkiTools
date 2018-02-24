@@ -2,16 +2,21 @@
 
 An Anki \*.apkg and \*.anki2 reader/editor to work with in Python. Also included a module on [AnkiConnect](https://github.com/FooSoft/anki-connect).
 
+## Installation
+
+1. Clone the git, and `cd`
+2. In terminal, run `pip3 install .`
+
 ## Parsing \*.apkg and \*.anki2 in a human readable and easily manageable format.
 
 ```python
 from AnkiTools.tools.read import readApkg
 
 with readApkg('Chinese.apkg')) as anki:
-    anki.midToModel('xxxxxxx')
-    anki.didToDeck('xxxxxxx')
-    anki.nidToNote('xxxxxxx')
-    anki.cidToCard('xxxxxxx')
+    anki.models[mid]
+    anki.decks[did]
+    anki.notes[nid]
+    anki.cards[cid]
 
 Also,
 
@@ -21,26 +26,40 @@ with readAnki2('collection.anki2')) as anki:
 
 Result formats
 ```
-model = {
-    'mid': mid,
-    'name': v['name'],
+models[mid] = {
+    'name': model_name,
     'fields': fieldNames,
     'templates': templateNames
 }
-deck = {
-    'did': did,
+decks[did] = {
     'name': v['name']
 }
-note = {
-    'nid': nid,
+notes[nid] = {
     'mid': mid,
+    'model': {
+        'name': model_name,
+        'fields': fieldNames,
+        'templates': templateNames
+    }
     'content': content,
     'tags': tags
 }
-card = {
-    'cid': cid,
+cards[cid] = {
     'nid': nid,
+    'note': {
+        'mid': mid,
+        'model': {
+            'name': model_name,
+            'fields': fieldNames,
+            'templates': templateNames
+        }
+        'content': content,
+        'tags': tags
+    }
     'did': did,
+    'deck': {
+        'name': v['name']
+    }
     'ord': ord
 }
 ```
@@ -51,40 +70,7 @@ I also added searching with regex
     anki.getNotesByField(model_id, field_number, regex)
 ```
 
-For searching cards, you will need querying, which take a little long to load, so I created a separate function `loadQuery()`.
-```python
-    anki.loadQuery() # Takes around 90 seconds to load
-    params = {
-        'type': type,
-        'key': key,
-        'i': field_number or something_of_that_sort
-    }
-    anki.getCardQuery(regex, params)
-```
-
-Query format
-```
-query = {
-    'cid': card['cid'],
-    'note': {
-        'nid': nid,
-        'mid': mid,
-        'content': content,
-        'tags': tags
-    },
-    'deck': {
-        'did': did,
-        'name': v['name']
-    },
-    'model': {
-        'mid': mid,
-        'name': v['name'],
-        'fields': fieldNames,
-        'templates': templateNames
-    },
-    'ord': card['ord'],
-}
-```
+`anki.loadQuery()` is now obsolete. You can search cards by iterating through `anki.cards`. A function may be implemented later, if I feel the need.
 
 See also the \*.apkg format documentation from [Anki decks collaboration Wiki](http://decks.wikia.com/wiki/Anki_APKG_format_documentation) and [AnkiDroid](https://github.com/ankidroid/Anki-Android/wiki/Database-Structure)
 
@@ -124,26 +110,6 @@ with edit.editApkg('Chinese.apkg') as anki:
                         'did': deck_id,  # Must match existing did's
                         'ord': order_in_list_of_template_names
                     }])
-    anki.updateCardQueries([{
-                              'cid': card_id,  # May be left out
-                              'note': {
-                                           'nid': note_id,  # May be left out
-                                           'mid': model_id,  # May be left out
-                                           'content': list_of_field_contents,
-                                           'tags': list_of_tags
-                                       }
-                              'deck': {
-                                          'did': deck_id,  # May be left out
-                                          'name': deck_name
-                                      }
-                              'model': {
-                                           'mid': mid,  # May be left out
-                                           'name': v['name'],
-                                           'fields': fieldNames,
-                                           'templates': templateNames
-                                       }
-                              'ord': order_in_list_of_template_names,
-                          }])
 ```
 
 ## Exporting \*.anki2 to \*.apkg
