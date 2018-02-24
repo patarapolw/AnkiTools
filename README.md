@@ -76,6 +76,12 @@ query = {
         'did': did,
         'name': v['name']
     },
+    'model': {
+        'mid': mid,
+        'name': v['name'],
+        'fields': fieldNames,
+        'templates': templateNames
+    },
     'ord': card['ord'],
 }
 ```
@@ -107,15 +113,15 @@ with edit.editApkg('Chinese.apkg') as anki:
 
     anki.updateNotes([{
                         'nid': note_id,  # May be left out
-                        'mid': model_id,
+                        'mid': model_id,  # Must match existing mid's
                         'content': list_of_field_contents,
                         'tags': list_of_tags
                     }])
 
     anki.updateCards([{
                         'cid': card_id,  # May be left out
-                        'nid': note_id,
-                        'did': deck_id,
+                        'nid': note_id,  # Must match existing nid's
+                        'did': deck_id,  # Must match existing did's
                         'ord': order_in_list_of_template_names
                     }])
     anki.updateCardQueries([{
@@ -140,7 +146,7 @@ with edit.editApkg('Chinese.apkg') as anki:
                           }])
 ```
 
-## Exporting \*.anki2
+## Exporting \*.anki2 to \*.apkg
 
 ```python
 from AnkiTools.tools.edit import editAnki2
