@@ -22,6 +22,7 @@ class readAnki2:
                         fieldNames.append(flds['name'])
 
                     self.models[mid] = {
+                        'mid': mid,
                         'name': v['name'],
                         'fields': fieldNames,
                         'templates': v['tmpls']
@@ -30,6 +31,7 @@ class readAnki2:
                 decks = json.loads(row[1])
                 for did, v in decks.items():
                     self.decks[did] = {
+                        'did': did,
                         'name': v['name']
                     }
 
@@ -41,6 +43,7 @@ class readAnki2:
                 content = row[2].split('\x1f')
                 tags = row[3].split(' ')
                 self.notes[nid] = {
+                    'nid': nid,
                     'mid': mid,
                     'model': self.models[mid],
                     'content': content,
@@ -55,6 +58,7 @@ class readAnki2:
                 did = str(row[2])
                 ord = row[3]
                 self.cards[cid] = {
+                    'cid': cid,
                     'nid': nid,
                     'note': self.notes[nid],
                     'did': did,

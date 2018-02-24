@@ -41,6 +41,8 @@ class editAnki2:
             full_models = json.dumps(editor)
             conn.execute('UPDATE col SET models=?', (full_models, ))
 
+        return [model['mid'] for model in models]
+
     def updateDecks(self, decks):
         with sqlite3.connect(self.anki2) as conn:
             cursor = conn.execute('SELECT decks FROM col')
@@ -55,11 +57,17 @@ class editAnki2:
             full_decks = json.dumps(editor)
             conn.execute('UPDATE col SET decks=?', (full_decks, ))
 
+        return [deck['did'] for deck in decks]
+
     def updateNotes(self, notes):
         with sqlite3.connect(self.anki2) as conn:
             for note in notes:
                 note.setdefault('nid', create.intTime(1000))
-                # mid must be supplied, otherwise, use updateCardQueries
+
+                # mid if not supplied, use model
+                if 'mid' not in note.keys():
+                    note['mid'] = self.updateModels([note['model']])[0]
+
                 cursor = conn.execute('SELECT * FROM notes WHERE id=?', (note['nid'], ))
                 if cursor.fetchone() is None:
                     conn.executemany('INSERT INTO notes VALUES (?)', create.newNote(note))
@@ -68,12 +76,22 @@ class editAnki2:
                                  (note['mid'], note['content'].join('\x1f'), note['tags'].join(' '),
                                   note['nid']))
 
+        return [note['nid'] for note in notes]
+
     def updateCards(self, cards):
         with sqlite3.connect(self.anki2) as conn:
             for card in cards:
                 card.setdefault('cid', create.intTime(1000))
                 card.setdefault('ord', 0)
-                # nid, did must be supplied, otherwise, use updateCardQueries
+
+                # nid if not supplied, use note
+                if 'nid' not in card.keys():
+                    card['nid'] = self.updateNotes([card['note']])[0]
+
+                # did if not supplied, use deck
+                if 'did' not in card.keys():
+                    card['did'] = self.updateDecks([card['deck']])[0]
+
                 cursor = conn.execute('SELECT * FROM notes WHERE id=?', (card['id'],))
                 if cursor.fetchone() is None:
                     conn.executemany('INSERT INTO notes VALUES (?)', create.newCard(card))
@@ -81,25 +99,7 @@ class editAnki2:
                     conn.execute('UPDATE cards SET nid=?, did=?, ord=? WHERE id=?',
                                  (card['nid'], card['did'], card['ord'], card['cid']))
 
-    def updateCardQueries(self, cardQueries):
-        with sqlite3.connect(self.anki2) as conn:
-            for cardQuery in cardQueries:
-                note = cardQuery.pop('note')
-                deck = cardQuery.pop('deck')
-                model = cardQuery.pop('model')
-
-                note.setdefault('nid', create.intTime(1000))
-                cardQuery['nid'] = note['nid']
-                deck.setdefault('did', create.intTime(1000))
-                cardQuery['did'] = deck['did']
-
-                model.setdefault('mid', create.intTime(1000))
-                note['mid'] = model['mid']
-
-                self.updateNotes([note])
-                self.updateDecks([deck])
-                self.updateModels([model])
-                self.updateCards([cardQuery])
+        return [card['cid'] for card in cards]
 
     def export(self, output=''):
         if output == '':
