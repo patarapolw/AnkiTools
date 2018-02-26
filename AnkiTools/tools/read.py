@@ -72,35 +72,6 @@ class readAnki2:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    #
-    # def nidToNote(self, nid):
-    #     for note in self.notes:
-    #         if nid == note['nid']:
-    #             return note
-    #     return dict()
-    #
-    # def didToDeck(self, did):
-    #     for deck in self.decks:
-    #         if did == deck['did']:
-    #             return deck
-    #     return dict()
-    #
-    # def midToModel(self, mid):
-    #     for model in self.models:
-    #         if model['mid'] == mid:
-    #             return model
-    #     return dict()
-    #
-    # def cidToCard(self, cid):
-    #     for card in self.cards:
-    #         if card['cid'] == cid:
-    #             return card
-    #     return dict()
-    #
-    # def searchFieldIdByMid(self, mid, fieldName):
-    #     model = self.midToModel(mid)
-    #     return model['fields'].index(fieldName)
-
     def getDecks(self, regex):
         for deck in self.decks.values():
             if re.match(regex, deck['name']) is not None:

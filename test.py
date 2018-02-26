@@ -28,25 +28,4 @@ with edit.editApkg(os.path.join('apkg', 'Chinese.apkg')) as anki:
     #                     'did': deck_id,
     #                     'ord': order_in_list_of_template_names
     #                 })
-    humanNotes = [{'content': OrderedDict([('English', 'Hello!'),
-                              ('Pinyin', 'Nǐ hǎo!'),
-                              ('Hanzi', '你好！'),
-                              ('Audio', '[sound:tmp1cctcn.mp3]')]),
-                   'model name': 'MarkAudio-787e4'}]
-    anki.updateHumanNotes(humanNotes)
-
-    humanCards = [{'content': OrderedDict([('English', 'Hello!'),
-                              ('Pinyin', 'Nǐ hǎo!'),
-                              ('Hanzi', '你好！'),
-                              ('Audio', '[sound:tmp1cctcn.mp3]')]),
-                   'deck name': 'SpoonFedChinese',
-                   'model name': 'MarkAudio-787e4',
-                   'template': 'Card 1'},
-                  {'content': OrderedDict([('English', 'Hello!'),
-                                           ('Pinyin', 'Nǐ hǎo!'),
-                                           ('Hanzi', '你好！'),
-                                           ('Audio', '[sound:tmp1cctcn.mp3]')]),
-                   'deck name': 'SpoonFedChinese',
-                   'model name': 'MarkAudio-787e4',
-                   'template': 'Card 2'}]
-    anki.updateHumanCards(humanCards)
+    pass
