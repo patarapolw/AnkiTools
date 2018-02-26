@@ -27,37 +27,52 @@ with readAnki2('collection.anki2')) as anki:
 Result formats
 ```
 models[mid] = {
+    'mid': model_id,
     'name': model_name,
     'fields': fieldNames,
-    'templates': templateNames
+    'templates': [{
+            "name": template_name,
+            "qfmt": question_markup,
+            "did":null,
+            "bafmt":"",
+            "afmt": answer_markup,
+            "ord": order_in_template,
+            "bqfmt":""
+         }, ... ]
 }
 decks[did] = {
-    'name': v['name']
+    'did': deck_id,
+    'name': deck_name
 }
 notes[nid] = {
-    'mid': mid,
+    'nid': note_id,
+    'mid': model_id,
     'model': {
+        'mid': model_id,
         'name': model_name,
         'fields': fieldNames,
         'templates': templateNames
     }
-    'content': content,
-    'tags': tags
+    'content': list_of_contents,
+    'tags': list_of_tags
 }
 cards[cid] = {
-    'nid': nid,
+    'cid': card_id
+    'nid': note_id,
     'note': {
-        'mid': mid,
+        'nid': note_id,
+        'mid': model_id,
         'model': {
             'name': model_name,
             'fields': fieldNames,
-            'templates': templateNames
+            'templates': list_of_templates
         }
         'content': content,
         'tags': tags
     }
-    'did': did,
+    'did': deck_id,
     'deck': {
+        'did': deck_id,
         'name': v['name']
     }
     'ord': ord
@@ -99,15 +114,34 @@ with edit.editApkg('Chinese.apkg') as anki:
 
     anki.updateNotes([{
                         'nid': note_id,  # May be left out
-                        'mid': model_id,  # Must match existing mid's
+                        'mid': model_id,  # Must specify either mid or model
+                        'model': {         # Will be ignored if mid is specified
+                            'name': model_name,
+                            'fields': list_of_field_names,
+                            'templates': list_of_template_names
+
+                        }
                         'content': list_of_field_contents,
                         'tags': list_of_tags
                     }])
 
     anki.updateCards([{
                         'cid': card_id,  # May be left out
-                        'nid': note_id,  # Must match existing nid's
-                        'did': deck_id,  # Must match existing did's
+                        'nid': note_id,  # Must specify either nid or note
+                        'note': {
+                            'model': {
+                                'name': model_name,
+                                'fields': list_of_field_names,
+                                'templates': list_of_template_names
+
+                            }
+                            'content': list_of_field_contents,
+                            'tags': list_of_tags
+                        }
+                        'did': deck_id,  # Must specify either did or deck
+                        'deck': {
+                            'name': deck_name
+                        }
                         'ord': order_in_list_of_template_names
                     }])
 ```
