@@ -45,8 +45,8 @@ def _2xlsx(anki, fout):
     workbook = Workbook()
 
     sheets = []
-    for note in anki.notes:
-        model = anki.midToModel(note['mid'])
+    for note in anki.notes.values():
+        model = note['model']
         if model['name'] not in sheets:
             worksheet = workbook.create_sheet(model['name'])
             sheets.append(model['name'])
@@ -85,8 +85,8 @@ def anki2tsv(fin, fout_dir=''):
 
 def _2tsv(anki, fout_dir):
     fout_tsv = dict()
-    for note in anki.notes:
-        model = anki.midToModel(note['mid'])
+    for note in anki.notes.values():
+        model = note['model']
         if model['name'] not in fout_tsv.keys():
             fout_tsv[model['name']] = open(os.path.join(fout_dir, model['name'] + '.tsv'), 'w')
 
@@ -125,8 +125,8 @@ def anki2csv(fin, fout_dir=''):
 def _2csv(anki, fout_dir):
     fout_csv = dict()
     writer_csv = dict()
-    for note in anki.notes:
-        model = anki.midToModel(note['mid'])
+    for note in anki.notes.values():
+        model = note['model']
         if model['name'] not in fout_csv.keys():
             fout_csv[model['name']] = open(os.path.join(fout_dir, model['name'] + '.csv'), 'w')
             writer_csv[model['name']] = csv.writer(fout_csv[model['name']])
@@ -158,8 +158,8 @@ def anki2sqlite(fin, fout=''):
 def _2sqlite(anki, fout):
     with sqlite3.connect(fout) as conn:
         used_models = []
-        for note in anki.notes:
-            model = anki.midToModel(note['mid'])
+        for note in anki.notes.values():
+            model = note['model']
             if model['name'] not in used_models:
                 used_models.append(model['name'])
 

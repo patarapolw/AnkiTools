@@ -1,0 +1,4 @@
+python setup.py sdist
+pip install wheel
+python setup.py bdist_wheel --universal
+twine upload dist/*

@@ -72,25 +72,6 @@ class readAnki2:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    def getDecks(self, regex):
-        for deck in self.decks.values():
-            if re.match(regex, deck['name']) is not None:
-                yield deck
-
-    def getNotesByField(self, model_id, field_number, regex):
-        for note in self.notes.values():
-            if note['mid'] == model_id:
-                if re.match(regex, note['content'][field_number]) is not None:
-                    yield note
-
-    # def getCardQuery(self, regex, params):
-    #     for cardQuery in self.cardQuery:
-    #         query = cardQuery[params['type']][params['key']]
-    #         if type(query) is list:
-    #             query = cardQuery[params['type']][params['key']][params['i']]
-    #         if re.match(regex, query) is not None:
-    #             yield cardQuery
-
 
 class readApkg(readAnki2):
     def __init__(self, path_to_file):
@@ -109,6 +90,3 @@ class readApkg(readAnki2):
     def close(self):
         shutil.rmtree(const.temp_dir)
 
-
-if __name__ == '__main__':
-    pass

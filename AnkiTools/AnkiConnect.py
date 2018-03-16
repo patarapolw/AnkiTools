@@ -2,7 +2,9 @@ import requests
 import json
 
 
-def POST(action, version=5, params={}):
+def POST(action, version=5, params=None):
+    if params is None:
+        params = dict()
     to_send = json.dumps({
         'action': action,
         'version': version,
@@ -11,7 +13,3 @@ def POST(action, version=5, params={}):
 
     r = requests.post('http://127.0.0.1:8765', data=to_send)
     return json.loads(r.text)
-
-
-if __name__ == '__main__':
-    print(POST('deckNames'))
