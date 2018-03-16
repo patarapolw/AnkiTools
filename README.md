@@ -4,8 +4,7 @@ An Anki \*.apkg and \*.anki2 reader/editor to work with in Python. Also included
 
 ## Installation
 
-1. Clone the git, and `cd`
-2. In terminal, run `pip3 install .`
+`pip install AnkiTools`
 
 ## Parsing \*.apkg and \*.anki2 in a human readable and easily manageable format.
 
