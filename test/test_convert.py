@@ -39,19 +39,19 @@ class FromAnki2(unittest.TestCase):
         anki2csv(ANKI2)
 
     def test_anki2tsv(self):
-        anki2tsv(APKG)
+        anki2tsv(ANKI2)
 
 
 @unittest.skipUnless(int(os.getenv('ALL_TESTS', '0')), 'slow')
 class FromAnki2Slow(unittest.TestCase):
     def test_anki2sqlite(self):
         """ 43 seconds """
-        anki2sqlite(APKG)
+        anki2sqlite(ANKI2)
 
     @unittest.skipIf(int(os.getenv('NO_XLSX', '0')), 'slow')
     def test_anki2xlsx(self):
         """ 7 min 22 sec"""
-        anki2xlsx(APKG)
+        anki2xlsx(ANKI2)
 
 
 if __name__ == '__main__':

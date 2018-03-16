@@ -1,3 +1,3 @@
 import os
 
-os.chdir('test')
+os.chdir(os.path.dirname(os.path.abspath(__file__)))

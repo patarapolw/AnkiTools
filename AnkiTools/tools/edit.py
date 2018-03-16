@@ -17,6 +17,12 @@ class editAnki2:
         self.anki2 = path_to_file
         self.db = read.readAnki2(path_to_file)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
     def updateModels(self, models):
         with sqlite3.connect(self.anki2) as conn:
             cursor = conn.execute('SELECT models FROM col')

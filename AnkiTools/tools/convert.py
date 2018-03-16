@@ -21,8 +21,8 @@ def anki2apkg(fin, fout=''):
     if fout == '':
         fout = os.path.splitext(fin)[0] + '.apkg'
 
-    with editAnki2(fin) as anki:
-        anki.export(fout)
+    anki = editAnki2(fin)
+    anki.export(fout)
 
 
 def apkg2xlsx(fin, fout=''):
@@ -37,8 +37,8 @@ def anki2xlsx(fin, fout=''):
     if fout == '':
         fout = os.path.splitext(fin)[0] + '.xlsx'
 
-    with readAnki2(fin) as anki:
-        _2xlsx(anki, fout)
+    anki = readAnki2(fin)
+    _2xlsx(anki, fout)
 
 
 def _2xlsx(anki, fout):

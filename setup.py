@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='AnkiTools',
-      version='0.1.5',
+      version='0.1.6',
       description='Anki *.apkg reader in a human-readable format; and an editor.',
       url='https://github.com/patarapolw/AnkiTools',
       author='Pacharapol Withayasakpunt',
