@@ -1,4 +1,4 @@
-import unittest
+import pytest
 import os
 
 
@@ -8,7 +8,7 @@ APKG = 'testfile/Chinese.apkg'
 ANKI2 = 'testfile/Chinese.anki2'
 
 
-class FromApkg(unittest.TestCase):
+class TestFromApkg:
     def test_apkg2anki(self):
         apkg2anki(APKG)
 
@@ -19,19 +19,19 @@ class FromApkg(unittest.TestCase):
         apkg2tsv(APKG)
 
 
-@unittest.skipUnless(int(os.getenv('ALL_TESTS', '0')), 'slow')
-class FromApkgSlow(unittest.TestCase):
+@pytest.mark.skipif(not int(os.getenv('ALL_TESTS', '0')), reason='slow')
+class TestFromApkgSlow:
     def test_apkg2sqlite(self):
         """ 43 seconds """
         apkg2sqlite(APKG)
 
-    @unittest.skipIf(int(os.getenv('NO_XLSX', '0')), 'slow')
+    @pytest.mark.skipIf(int(os.getenv('NO_XLSX', '0')), reason='slow')
     def test_apkg2xlsx(self):
         """ 7 min 22 sec"""
         apkg2xlsx(APKG)
 
 
-class FromAnki2(unittest.TestCase):
+class TestFromAnki2:
     def test_anki2apkg(self):
         anki2apkg(ANKI2)
 
@@ -42,17 +42,17 @@ class FromAnki2(unittest.TestCase):
         anki2tsv(ANKI2)
 
 
-@unittest.skipUnless(int(os.getenv('ALL_TESTS', '0')), 'slow')
-class FromAnki2Slow(unittest.TestCase):
+@pytest.mark.skipif(not int(os.getenv('ALL_TESTS', '0')), reason='slow')
+class FromAnki2Slow:
     def test_anki2sqlite(self):
         """ 43 seconds """
         anki2sqlite(ANKI2)
 
-    @unittest.skipIf(int(os.getenv('NO_XLSX', '0')), 'slow')
+    @pytest.mark.skipif(int(os.getenv('NO_XLSX', '0')), reason='slow')
     def test_anki2xlsx(self):
         """ 7 min 22 sec"""
         anki2xlsx(ANKI2)
 
 
 if __name__ == '__main__':
-    unittest.main()
+    pytest.main(__file__)

@@ -105,3 +105,9 @@ apkg/
 anki2/
 temp/
 testfile/
+*.apkg
+*.anki2
+*.xlsx
+*.tsv
+*.csv
+*.sqlite
