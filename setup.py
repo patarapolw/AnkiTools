@@ -8,6 +8,6 @@ setup(name='AnkiTools',
       author_email='patarapolw@gmail.com',
       license='MIT',
       packages=find_packages(exclude=['test']),
-      install_requires=['requests'],
+      install_requires=['requests', 'openpyxl'],
       python_requires='>=2.7'
       )
