@@ -111,3 +111,6 @@ testfile/
 *.tsv
 *.csv
 *.sqlite
+
+# Large Jupyter Notebook files
+*.ipynb

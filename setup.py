@@ -1,13 +1,37 @@
 from setuptools import setup, find_packages
+from codecs import open
+from os import path
 
-setup(name='AnkiTools',
-      version='0.1.6',
-      description='Anki *.apkg reader in a human-readable format; and an editor.',
-      url='https://github.com/patarapolw/AnkiTools',
-      author='Pacharapol Withayasakpunt',
-      author_email='patarapolw@gmail.com',
-      license='MIT',
-      packages=find_packages(exclude=['test']),
-      install_requires=['requests', 'openpyxl'],
-      python_requires='>=2.7'
-      )
+here = path.abspath(path.dirname(__file__))
+
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
+setup(
+    name='AnkiTools',
+    version='0.1.7',
+    description='Anki *.apkg reader in a human-readable format; and an editor',
+    long_description=long_description,  # Optional
+    long_description_content_type='text/markdown',  # Optional (see note above)
+    url='https://github.com/patarapolw/AnkiTools',
+    author='Pacharapol Withayasakpunt',
+    author_email='patarapolw@gmail.com',
+    license='MIT',
+    keywords='Anki AnkiConnect',  # Optional
+    packages=find_packages(exclude=['test']),
+    install_requires=['requests', 'openpyxl'],
+    classifiers=[
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Utilities'
+    ],
+    python_requires='>=2.7',
+    tests_require=['pytest'],
+    extras_require={
+        'tests': ['pytest']
+    }
+)

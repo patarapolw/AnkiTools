@@ -9,6 +9,8 @@ openpyxl = "*"
 
 [dev-packages]
 pytest = "*"
+jupyter = "*"
+pytest-doctestplus = "*"
 
 [requires]
 python_version = "3.6"

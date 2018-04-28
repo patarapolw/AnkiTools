@@ -3,6 +3,14 @@ import json
 
 
 def POST(action, version=5, params=None):
+    """
+    For the documentation, see https://foosoft.net/projects/anki-connect/
+    
+    :param action:
+    :param version:
+    :param params:
+    :return:
+    """
     if params is None:
         params = dict()
     to_send = json.dumps({
