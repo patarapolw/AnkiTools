@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='AnkiTools',
-    version='0.1.8',
+    version='0.1.9',
     description='Anki *.apkg reader in a human-readable format; and an editor',
     long_description=long_description,  # Optional
     long_description_content_type='text/markdown',  # Optional (see note above)
@@ -21,6 +21,7 @@ setup(
     packages=find_packages(exclude=['test']),
     install_requires=['requests', 'openpyxl'],
     classifiers=[
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
