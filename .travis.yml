@@ -12,4 +12,4 @@ install:
 
 script:
   - "python setup.py test"
-  - "pytest --doctest-modules"
+  - "pytest"
