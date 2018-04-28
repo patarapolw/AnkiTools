@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='AnkiTools',
-    version='0.1.7',
+    version='0.1.8',
     description='Anki *.apkg reader in a human-readable format; and an editor',
     long_description=long_description,  # Optional
     long_description_content_type='text/markdown',  # Optional (see note above)
@@ -24,12 +24,12 @@ setup(
         'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Topic :: Utilities'
     ],
-    python_requires='>=2.7',
+    python_requires='>=3',
     tests_require=['pytest'],
     extras_require={
         'tests': ['pytest']
