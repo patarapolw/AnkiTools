@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 >>> from AnkiTools.tools.read import readApkg
 >>> anki = readApkg('test/testfile/Chinese.apkg')

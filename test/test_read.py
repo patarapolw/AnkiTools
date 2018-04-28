@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pytest
 
 from AnkiTools.tools.read import readApkg, readAnki2

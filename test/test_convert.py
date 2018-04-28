@@ -1,5 +1,4 @@
 import pytest
-import os
 
 
 from AnkiTools.tools.convert import *
