@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "AnkiTools"
+version = "0.3.0"
+description = "an Anki *.apkg and collection.anki2 reader and editor"
+authors = ["Pacharapol Withayasakpunt <patarapolw@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+keywords = ['anki', 'ankiconnect']
+include = ["AnkiTools/*.json"]
+
+[tool.poetry.dependencies]
+python = ">=3.5"
+requests = "^2.19"
+bs4 = "^0.0.1"
+appdirs = "^1.4"
+openpyxl = "^2.5"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.6"
+jupyter = "^1.0"
+notebook = "^5.5"
+pytest-doctestplus = "^0.1.3"

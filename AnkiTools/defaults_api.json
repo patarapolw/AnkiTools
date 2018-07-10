@@ -1,0 +1,14 @@
+{
+  "model_definition": {
+    "templates": [
+      {
+        "name": "Card 1",
+        "data": {
+          "qfmt": "{{%s}}",
+          "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{%s}}"
+        }
+      }
+    ],
+    "css": null
+  }
+}

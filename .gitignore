@@ -103,6 +103,7 @@ ENV/
 # sample
 apkg/
 anki2/
+tmp/
 temp/
 testfile/
 *.apkg

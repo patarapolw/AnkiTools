@@ -1,0 +1,283 @@
+{
+  "decks": {
+    "1": {
+      "name": "Default",
+      "extendRev": 50,
+      "usn": 0,
+      "collapsed": false,
+      "newToday": [
+        0,
+        0
+      ],
+      "timeToday": [
+        0,
+        0
+      ],
+      "dyn": 0,
+      "extendNew": 10,
+      "conf": 1,
+      "revToday": [
+        0,
+        0
+      ],
+      "lrnToday": [
+        0,
+        0
+      ],
+      "id": 1,
+      "mod": 1531228931,
+      "desc": ""
+    }
+  },
+  "models": {
+    "1531228931967": {
+      "vers": [],
+      "name": "Basic (optional reversed card)",
+      "tags": [],
+      "did": 1,
+      "usn": -1,
+      "req": [
+        [
+          0,
+          "all",
+          [
+            0
+          ]
+        ],
+        [
+          1,
+          "all",
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "flds": [
+        {
+          "size": 20,
+          "name": "Front",
+          "media": [],
+          "rtl": false,
+          "ord": 0,
+          "font": "Arial",
+          "sticky": false
+        },
+        {
+          "size": 20,
+          "name": "Back",
+          "media": [],
+          "rtl": false,
+          "ord": 1,
+          "font": "Arial",
+          "sticky": false
+        },
+        {
+          "size": 20,
+          "name": "Add Reverse",
+          "media": [],
+          "rtl": false,
+          "ord": 2,
+          "font": "Arial",
+          "sticky": false
+        }
+      ],
+      "sortf": 0,
+      "latexPre": "\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n",
+      "tmpls": [
+        {
+          "afmt": "{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}",
+          "name": "Card 1",
+          "qfmt": "{{Front}}",
+          "did": null,
+          "ord": 0,
+          "bafmt": "",
+          "bqfmt": ""
+        },
+        {
+          "afmt": "{{FrontSide}}\n\n<hr id=answer>\n\n{{Front}}",
+          "name": "Card 2",
+          "qfmt": "{{#Add Reverse}}{{Back}}{{/Add Reverse}}",
+          "did": null,
+          "ord": 1,
+          "bafmt": "",
+          "bqfmt": ""
+        }
+      ],
+      "latexPost": "\\end{document}",
+      "type": 0,
+      "id": "1531228931967",
+      "css": ".card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}\n",
+      "mod": 1531228931
+    },
+    "1531228931966": {
+      "vers": [],
+      "name": "Cloze",
+      "tags": [],
+      "did": 1,
+      "usn": -1,
+      "flds": [
+        {
+          "size": 20,
+          "name": "Text",
+          "media": [],
+          "rtl": false,
+          "ord": 0,
+          "font": "Arial",
+          "sticky": false
+        },
+        {
+          "size": 20,
+          "name": "Extra",
+          "media": [],
+          "rtl": false,
+          "ord": 1,
+          "font": "Arial",
+          "sticky": false
+        }
+      ],
+      "sortf": 0,
+      "latexPre": "\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n",
+      "tmpls": [
+        {
+          "afmt": "{{cloze:Text}}<br>\n{{Extra}}",
+          "name": "Cloze",
+          "qfmt": "{{cloze:Text}}",
+          "did": null,
+          "ord": 0,
+          "bafmt": "",
+          "bqfmt": ""
+        }
+      ],
+      "latexPost": "\\end{document}",
+      "type": 1,
+      "id": "1531228931966",
+      "css": ".card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}\n\n.cloze {\n font-weight: bold;\n color: blue;\n}",
+      "mod": 1531228931
+    },
+    "1531228931972": {
+      "vers": [],
+      "name": "Basic",
+      "tags": [],
+      "did": 1,
+      "usn": -1,
+      "req": [
+        [
+          0,
+          "all",
+          [
+            0
+          ]
+        ]
+      ],
+      "flds": [
+        {
+          "size": 20,
+          "name": "Front",
+          "media": [],
+          "rtl": false,
+          "ord": 0,
+          "font": "Arial",
+          "sticky": false
+        },
+        {
+          "size": 20,
+          "name": "Back",
+          "media": [],
+          "rtl": false,
+          "ord": 1,
+          "font": "Arial",
+          "sticky": false
+        }
+      ],
+      "sortf": 0,
+      "latexPre": "\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n",
+      "tmpls": [
+        {
+          "afmt": "{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}",
+          "name": "Card 1",
+          "qfmt": "{{Front}}",
+          "did": null,
+          "ord": 0,
+          "bafmt": "",
+          "bqfmt": ""
+        }
+      ],
+      "latexPost": "\\end{document}",
+      "type": 0,
+      "id": "1531228931972",
+      "css": ".card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}\n",
+      "mod": 1531228931
+    },
+    "1531228931970": {
+      "vers": [],
+      "name": "Basic (and reversed card)",
+      "tags": [],
+      "did": 1,
+      "usn": -1,
+      "req": [
+        [
+          0,
+          "all",
+          [
+            0
+          ]
+        ],
+        [
+          1,
+          "all",
+          [
+            1
+          ]
+        ]
+      ],
+      "flds": [
+        {
+          "size": 20,
+          "name": "Front",
+          "media": [],
+          "rtl": false,
+          "ord": 0,
+          "font": "Arial",
+          "sticky": false
+        },
+        {
+          "size": 20,
+          "name": "Back",
+          "media": [],
+          "rtl": false,
+          "ord": 1,
+          "font": "Arial",
+          "sticky": false
+        }
+      ],
+      "sortf": 0,
+      "latexPre": "\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n",
+      "tmpls": [
+        {
+          "afmt": "{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}",
+          "name": "Card 1",
+          "qfmt": "{{Front}}",
+          "did": null,
+          "ord": 0,
+          "bafmt": "",
+          "bqfmt": ""
+        },
+        {
+          "afmt": "{{FrontSide}}\n\n<hr id=answer>\n\n{{Front}}",
+          "name": "Card 2",
+          "qfmt": "{{Back}}",
+          "did": null,
+          "ord": 1,
+          "bafmt": "",
+          "bqfmt": ""
+        }
+      ],
+      "latexPost": "\\end{document}",
+      "type": 0,
+      "id": "1531228931970",
+      "css": ".card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}\n",
+      "mod": 1531228931
+    }
+  }
+}
