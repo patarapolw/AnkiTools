@@ -1,6 +1,7 @@
 import openpyxl as px
 from collections import OrderedDict, namedtuple
 from datetime import datetime
+import json
 
 from .api.ankidirect import AnkiDirect
 from .tools.defaults import DEFAULT_API_MODEL_DEFINITION
@@ -26,6 +27,19 @@ class AnkiExcelSync:
             self.wb = px.load_workbook(self.excel_filename)
         except FileNotFoundError:
             self.wb = self.create()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.save()
+        self.close()
+
+    def close(self):
+        self.wb.close()
+
+    def save(self):
+        self.wb.save(self.excel_filename)
 
     def to_excel(self):
         self.wb.save(self.excel_filename)
@@ -62,7 +76,10 @@ class AnkiExcelSync:
 
                 payload['data'][sheet_name].append(formatted_record)
 
+            # This will further be "string-formatted", so it needs to be deep-copied.
+            # Currently implemented using a ReadOnlyJsonObject object.
             payload['definitions'][sheet_name] = DEFAULT_API_MODEL_DEFINITION
+
             payload['definitions'][sheet_name]['templates'][0]['data']['qfmt'] = \
                 payload['definitions'][sheet_name]['templates'][0]['data']['qfmt'] % header[0]
             payload['definitions'][sheet_name]['templates'][0]['data']['afmt'] = \
@@ -110,7 +127,8 @@ class AnkiExcelSync:
                 continue
 
             # Writing record
-            print('Creating note {}'.format(note['id']))
+            print('Creating note {} - {}'.format(note['id'],
+                                                 json.dumps(note['formatted_flds'], ensure_ascii=False)))
 
             record = [note['id']]
             record.extend(note['formatted_flds'])

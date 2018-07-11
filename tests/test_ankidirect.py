@@ -3,7 +3,7 @@ import os
 import shutil
 from collections import OrderedDict
 import json
-from uuid import uuid4
+import tempfile
 
 from .getfile import get_file, get_parameters
 
@@ -94,7 +94,7 @@ def test_name_to_id(collection):
 
 
 @pytest.mark.parametrize('collection', collections)
-@pytest.mark.parametrize('data_list, result', test_parameters['TestAnkiDirectNoArgs']['test_add_sequential'])
+@pytest.mark.parametrize('data_list, result', test_parameters['test_add_sequential'])
 def test_add_sequential(collection,
                         data_list, result):
     with UniqueCollection(collection) as unique:
@@ -103,7 +103,7 @@ def test_add_sequential(collection,
 
 
 @pytest.mark.parametrize('collection', collections)
-@pytest.mark.parametrize('data_list, result', test_parameters['TestAnkiDirectNoArgs']['test_verify_add_info'])
+@pytest.mark.parametrize('data_list, result', test_parameters['test_verify_add_info'])
 def test_verify_add_info(collection,
                          data_list, result):
     ankidirect = ankidirects[collection]
@@ -113,7 +113,7 @@ def test_verify_add_info(collection,
 
 @pytest.mark.parametrize('collection', collections)
 @pytest.mark.parametrize('data_list_add, data_verify, result',
-                         test_parameters['TestAnkiDirectNoArgs']['test_verify_add_info_after_add'])
+                         test_parameters['test_verify_add_info_after_add'])
 def test_verify_add_info_after_add(collection,
                                    data_list_add, data_verify, result):
     with UniqueCollection(collection) as unique:
@@ -127,7 +127,7 @@ class UniqueCollection:
         if collection is None:
             collection = get_collection_path()
 
-        self.collection_path = '{}{}'.format(collection, uuid4())
+        self.collection_path = next(tempfile._get_candidate_names())
         shutil.copy(src=collection, dst=self.collection_path)
         self.ankidirect = AnkiDirect(anki_database=self.collection_path)
 

@@ -43,9 +43,9 @@ class AnkiContentCreator:
         tmpls = kwargs.get('tmpls', [self.new_template(template['name'], i, formatting=template['data'])
                                      for i, template in enumerate(model_definition['templates'])])
 
-        css = kwargs.get('css', model_definition['css'])
+        css = kwargs.get('css', model_definition.get('css', None))
         if css is None:
-            css = DEFAULT_TEMPLATE['css']
+            css = DEFAULT_MODEL['css']
 
         model_id = self._unique_id('models')
 

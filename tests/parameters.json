@@ -1,130 +1,49 @@
 {
   "test_ankidirect": {
-    "TestAnkiDirectNoArgs": {
-      "test_add_sequential": [
+    "test_add_sequential": [
+      [
         [
-          [
-            {
-              "data": {
-                "note_type A": [
-                  {
-                    "data": {
-                      "header A": "a",
-                      "header B": "b"
-                    },
-                    "decks": {
-                      "Forward": "Test Deck::Forward",
-                      "Backward": "Test Deck::Backward"
-                    }
+          {
+            "data": {
+              "note_type A": [
+                {
+                  "data": {
+                    "header A": "a",
+                    "header B": "b"
+                  },
+                  "decks": {
+                    "Forward": "Test Deck::Forward",
+                    "Backward": "Test Deck::Backward"
                   }
-                ]
-              },
-              "definitions": {
-                "note_type A": {
-                  "templates": [
-                    {
-                      "name": "Forward",
-                      "data": {
-                        "qfmt": "{{header A}}",
-                        "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header B}}"
-                      }
-                    },
-                    {
-                      "name": "Backward",
-                      "data": {
-                        "qfmt": "{{header B}}",
-                        "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header A}}"
-                      }
-                    }
-                  ],
-                  "css": "This is a test css."
                 }
-              }
-            }
-          ],
-          true
-        ],
-        [
-          [
-            {
-              "data": {
-                "note_type A": [
-                  {
-                    "data": {
-                      "header A": "a",
-                      "header B": "b"
-                    },
-                    "decks": {
-                      "Forward": "Test Deck::Forward",
-                      "Backward": "Test Deck::Backward"
-                    }
-                  }
-                ]
-              }
-            }
-          ],
-          false
-        ],
-        [
-          [
-            {
-              "data": {
-                "note_type A": [
-                  {
-                    "data": {
-                      "header A": "a",
-                      "header B": "b"
-                    },
-                    "decks": {
-                      "Forward": "Test Deck::Forward",
-                      "Backward": "Test Deck::Backward"
-                    }
-                  }
-                ]
-              },
-              "definitions": {
-                "note_type A": {
-                  "templates": [
-                    {
-                      "name": "Forward",
-                      "data": {
-                        "qfmt": "{{header A}}",
-                        "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header B}}"
-                      }
-                    },
-                    {
-                      "name": "Backward",
-                      "data": {
-                        "qfmt": "{{header B}}",
-                        "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header A}}"
-                      }
-                    }
-                  ],
-                  "css": "This is a test css."
-                }
-              }
+              ]
             },
-            {
-              "data": {
-                "note_type A": [
+            "definitions": {
+              "note_type A": {
+                "templates": [
                   {
+                    "name": "Forward",
                     "data": {
-                      "header A": "a",
-                      "header B": "b"
-                    },
-                    "decks": {
-                      "Forward": "Test Deck::Forward",
-                      "Backward": "Test Deck::Backward"
+                      "qfmt": "{{header A}}",
+                      "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header B}}"
+                    }
+                  },
+                  {
+                    "name": "Backward",
+                    "data": {
+                      "qfmt": "{{header B}}",
+                      "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header A}}"
                     }
                   }
-                ]
+                ],
+                "css": "This is a test css."
               }
             }
-          ],
-          true
-        ]
+          }
+        ],
+        true
       ],
-      "test_verify_add_info": [
+      [
         [
           {
             "data": {
@@ -141,9 +60,11 @@
                 }
               ]
             }
-          },
-          false
+          }
         ],
+        false
+      ],
+      [
         [
           {
             "data": {
@@ -182,50 +103,6 @@
               }
             }
           },
-          true
-        ]
-      ],
-      "test_verify_add_info_after_add": [
-        [
-          [
-            {
-              "data": {
-                "note_type A": [
-                  {
-                    "data": {
-                      "header A": "a",
-                      "header B": "b"
-                    },
-                    "decks": {
-                      "Forward": "Test Deck::Forward",
-                      "Backward": "Test Deck::Backward"
-                    }
-                  }
-                ]
-              },
-              "definitions": {
-                "note_type A": {
-                  "templates": [
-                    {
-                      "name": "Forward",
-                      "data": {
-                        "qfmt": "{{header A}}",
-                        "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header B}}"
-                      }
-                    },
-                    {
-                      "name": "Backward",
-                      "data": {
-                        "qfmt": "{{header B}}",
-                        "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header A}}"
-                      }
-                    }
-                  ],
-                  "css": "This is a test css."
-                }
-              }
-            }
-          ],
           {
             "data": {
               "note_type A": [
@@ -241,10 +118,131 @@
                 }
               ]
             }
-          },
-          true
-        ]
+          }
+        ],
+        true
       ]
-    }
+    ],
+    "test_verify_add_info": [
+      [
+        {
+          "data": {
+            "note_type A": [
+              {
+                "data": {
+                  "header A": "a",
+                  "header B": "b"
+                },
+                "decks": {
+                  "Forward": "Test Deck::Forward",
+                  "Backward": "Test Deck::Backward"
+                }
+              }
+            ]
+          }
+        },
+        false
+      ],
+      [
+        {
+          "data": {
+            "note_type A": [
+              {
+                "data": {
+                  "header A": "a",
+                  "header B": "b"
+                },
+                "decks": {
+                  "Forward": "Test Deck::Forward",
+                  "Backward": "Test Deck::Backward"
+                }
+              }
+            ]
+          },
+          "definitions": {
+            "note_type A": {
+              "templates": [
+                {
+                  "name": "Forward",
+                  "data": {
+                    "qfmt": "{{header A}}",
+                    "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header B}}"
+                  }
+                },
+                {
+                  "name": "Backward",
+                  "data": {
+                    "qfmt": "{{header B}}",
+                    "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header A}}"
+                  }
+                }
+              ],
+              "css": "This is a test css."
+            }
+          }
+        },
+        true
+      ]
+    ],
+    "test_verify_add_info_after_add": [
+      [
+        [
+          {
+            "data": {
+              "note_type A": [
+                {
+                  "data": {
+                    "header A": "a",
+                    "header B": "b"
+                  },
+                  "decks": {
+                    "Forward": "Test Deck::Forward",
+                    "Backward": "Test Deck::Backward"
+                  }
+                }
+              ]
+            },
+            "definitions": {
+              "note_type A": {
+                "templates": [
+                  {
+                    "name": "Forward",
+                    "data": {
+                      "qfmt": "{{header A}}",
+                      "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header B}}"
+                    }
+                  },
+                  {
+                    "name": "Backward",
+                    "data": {
+                      "qfmt": "{{header B}}",
+                      "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{header A}}"
+                    }
+                  }
+                ],
+                "css": "This is a test css."
+              }
+            }
+          }
+        ],
+        {
+          "data": {
+            "note_type A": [
+              {
+                "data": {
+                  "header A": "a",
+                  "header B": "b"
+                },
+                "decks": {
+                  "Forward": "Test Deck::Forward",
+                  "Backward": "Test Deck::Backward"
+                }
+              }
+            ]
+          }
+        },
+        true
+      ]
+    ]
   }
 }

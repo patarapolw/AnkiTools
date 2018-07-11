@@ -29,4 +29,9 @@ def read_anki_json(conn, json_name):
     :return dict:
     """
     cursor = conn.execute('SELECT {} FROM col'.format(json_name))
-    return json.loads(cursor.fetchone()[0])
+    record = cursor.fetchone()
+
+    if record is not None:
+        return json.loads(record[0])
+    else:
+        return dict()

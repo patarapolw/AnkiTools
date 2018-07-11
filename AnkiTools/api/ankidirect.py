@@ -1,10 +1,11 @@
 import sqlite3
 from time import time
 import psutil
+import os
 
 from AnkiTools.tools.path import get_collection_path
 from AnkiTools.tools.create import AnkiContentCreator
-from AnkiTools.tools.write import write_anki_json, write_anki_table
+from AnkiTools.tools.write import write_anki_json, write_anki_table, write_anki_schema
 from AnkiTools.tools.read import read_anki_json, read_anki_table
 
 from .verify import AnkiContentVerify
@@ -20,7 +21,13 @@ class AnkiDirect:
             except psutil.ZombieProcess as e:
                 print(e)
 
+        do_init = False
+        if not os.path.exists(anki_database):
+            do_init = True
         self.conn = sqlite3.connect(anki_database)
+        if do_init:
+            write_anki_schema(self.conn)
+
         self._id_to_record = self.data
         self._name_to_id = self.name_to_id
         self.creator = AnkiContentCreator(self._id_to_record)
