@@ -17,30 +17,33 @@ The \*.apkg format specification can be viewed from [Anki decks collaboration Wi
 pip install AnkiTools
 ```
 
-## Features
+## Featured modules
 
-- Read and write to Anki database in Application Data.
-- Read and create Anki file without Anki
-- Convert back and forth to Excel.
+### Anki file conversion
 
-# Examples
+```pydocstring
+>>> from AnkiTools import anki_convert
+>>> anki_convert('Chinese.apkg', out_file='Chinese_anki.xlsx')
+>>> anki_convert('my_workbook.xlsx', out_format='.apkg')
+```
+
+The supported formats are `.xlsx`, `.apkg` and `.anki2`.
+
+### AnkiDirect API
+
+You can directly edit the Anki app data in user's Application Data path.
 
 ```python
-import json
-from collections import OrderedDict
-
 from AnkiTools import AnkiDirect
+import json
 
-
-if __name__ == '__main__':
-    with open(add_info.json) as f:
-        data = json.load(f, object_pairs_hook=OrderedDict)
-
-    api = AnkiDirect()
-    api.add(data)
-    api.conn.commit()
+with open('payload.json') as f:
+    payload = json.load(f)
+with AnkiDirect() as api
+    api.add(payload)
 ```
-where `notes.json` is
+
+Some supported payloads include:
 
 ```json
 {
@@ -81,3 +84,28 @@ where `notes.json` is
   }
 }
 ```
+
+### AnkiConnect
+
+```pydocstring
+>>> from AnkiTools import AnkiConnect
+>>> AnkiConnect.is_online()
+True
+>>> params = {'actions': [{'action': 'deckNames'}, {'action': 'browse', 'params': {'query': 'deck:current'}}]}
+>>> AnkiConnect.post('multi', params=params)
+{'result': [['Default', 'SpoonFed', 'Chinese Hanzi Freq', 'Chinese Vocab'], None], 'error': None}
+```
+The actual addable actions and parameters can be viewed from [AnkiConnect](https://foosoft.net/projects/anki-connect/).
+
+## Plans
+
+- AnkiDirect two-way sync between Excel file and the Anki app.
+- Specifying metadata (e.g. card distribution, decks) in the Excel file and make it convertible and syncable.
+- Add CRUD to `AnkiDirect` ("update" and "remove" pending.)
+
+## Contributions
+
+- Testing on other OS's, e.g. Windows XP, Windows 10, Ubuntu Linux. (I tested on Mac.)
+- Manual testing of whether the generated `*.apkg` can be opened without subsequent errors in the Anki app.
+- Writing test cases and testing parameters. The current ones are viewable at [/tests/parameters.json](https://github.com/patarapolw/AnkiTools/blob/master/tests/parameters.json) and [/tests/files/](https://github.com/patarapolw/AnkiTools/tree/master/tests/files).
+- Specifying challenging payloads for AnkiDirect.

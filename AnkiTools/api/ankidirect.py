@@ -26,12 +26,19 @@ class AnkiDirect:
             do_init = True
 
         self.conn = sqlite3.connect(anki_database)
-        if do_init:
-            write_anki_schema(self.conn)
 
-        self._id_to_record = self.data
+        if do_init:
+            self.creator = AnkiContentCreator()
+            write_anki_schema(self.conn)
+            anki_collection = self.creator.new_collection()
+            write_anki_table(self.conn, 'col', [anki_collection], do_commit=True)
+            self._id_to_record = self.data
+        else:
+            self._id_to_record = self.data
+            self.creator = AnkiContentCreator(self._id_to_record)
+
         self._name_to_id = self.name_to_id
-        self.creator = AnkiContentCreator(self._id_to_record)
+
         self.verify = AnkiContentVerify(self._id_to_record)
 
     @property

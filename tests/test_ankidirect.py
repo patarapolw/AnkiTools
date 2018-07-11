@@ -86,7 +86,7 @@ def test_name_to_id(collection):
         try:
             item_name, item_ids = list(v.items())[0]
             assert isinstance(item_name, str)
-            print(all([isinstance(item_id, int) for item_id in item_ids]))
+            assert all([item_id.isdigit() for item_id in item_ids]) is True  # item_ids are actually digital strings.
         except IndexError as e:
             print(e)
 

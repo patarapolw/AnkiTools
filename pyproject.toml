@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "AnkiTools"
-version = "0.3.2"
+version = "0.3.3"
 description = "an Anki *.apkg and collection.anki2 reader and editor"
 authors = ["Pacharapol Withayasakpunt <patarapolw@gmail.com>"]
 license = "MIT"

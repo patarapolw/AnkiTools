@@ -2,16 +2,22 @@ from time import time
 from collections import OrderedDict
 from bs4 import BeautifulSoup
 from hashlib import sha1
+import json
 
-from .defaults import DEFAULT_TEMPLATE, DEFAULT_MODEL, DEFAULT_API_MODEL_DEFINITION
+from .defaults import (DEFAULT_COLLECTION,
+                       DEFAULT_TEMPLATE,
+                       DEFAULT_MODEL,
+                       DEFAULT_API_MODEL_DEFINITION,
+                       IS_JSON)
 from .guid import guid64
 
 
 class AnkiContentCreator:
-    def __init__(self, ids=None):
+    def __init__(self, ids=None, formatted_defaults=True):
         """
 
         :param dict ids:
+        :param bool formatted_defaults:
         """
         if not ids:
             ids = {
@@ -24,6 +30,8 @@ class AnkiContentCreator:
         self.ids = dict()
         for k, v in ids.items():
             self.ids[k] = set(ids[k].keys())
+
+        self.formatted_defaults = formatted_defaults
 
     def new_model(self, model_name, model_header, model_definition=None, modified=None, **kwargs):
         """
@@ -49,24 +57,28 @@ class AnkiContentCreator:
 
         model_id = self._unique_id('models')
 
-        model = {
-            "vers": kwargs.get('vers', []),
-            "name": model_name,
-            "tags": kwargs.get('tags', []),
-            "did": kwargs.get('did', None),
-            "usn": kwargs.get('usn', -1),
-            "req": kwargs.get('req', [[0, "all",[0]]]),
-            "flds": [self.new_field(field_name, i, **kwargs.get('flds_kwargs', dict()))
-                     for i, field_name in enumerate(model_header)],
-            "sortf": kwargs.get('sortf', 0),
-            "latexPre": kwargs.get('latexPre', DEFAULT_MODEL['latexPre']),
-            "tmpls": tmpls,
-            "latexPost": kwargs.get('latexPost', DEFAULT_MODEL['latexPost']),
-            "type": kwargs.get('type', 0),
-            "id": model_id,
-            "css": css,
-            "mod": modified
-        }
+        model = dict([
+            ("vers", []),
+            ("name", model_name),
+            ("tags", []),
+            ("did", None),
+            ("usn", -1),
+            ("req", [[0, "all", [0]]]),
+            ("flds", [self.new_field(field_name, i, **kwargs.get('flds_kwargs', dict()))
+                      for i, field_name in enumerate(model_header)]),
+            ("sortf", 0),
+            ("latexPre", DEFAULT_MODEL['latexPre']),
+            ("tmpls", tmpls),
+            ("latexPost", DEFAULT_MODEL['latexPost']),
+            ("type", 0),
+            ("id", model_id),
+            ("css", css),
+            ("mod", modified)
+        ])
+
+        for k, v in model.items():
+            if k in kwargs.keys():
+                model[k] = kwargs[k]
 
         return model
 
@@ -79,15 +91,19 @@ class AnkiContentCreator:
         :param kwargs:
         :return:
         """
-        field = {
-            'name': field_name,
-            'rtl': kwargs.get('rtl', False),
-            'sticky': kwargs.get('sticky', False),
-            'media': kwargs.get('media', []),
-            'ord': ordering,
-            'font': kwargs.get('font', 'Arial'),
-            'size': kwargs.get('size', 12)
-        }
+        field = dict([
+            ('name', field_name),
+            ('rtl', False),
+            ('sticky', False),
+            ('media', []),
+            ('ord', ordering),
+            ('font', 'Arial'),
+            ('size', 12)
+        ])
+
+        for k, v in field.items():
+            if k in kwargs.keys():
+                field[k] = kwargs[k]
 
         return field
 
@@ -104,15 +120,19 @@ class AnkiContentCreator:
         if formatting is not None:
             kwargs.update(formatting)
 
-        template = {
-            'name': template_name,
-            'qfmt': kwargs.get('qfmt', DEFAULT_TEMPLATE['qfmt']),
-            'did': kwargs.get('did', None),
-            'bafmt': kwargs.get('bafmt', DEFAULT_TEMPLATE['bafmt']),
-            'afmt': kwargs.get('afmt', DEFAULT_TEMPLATE['afmt']),
-            'ord': ordering,
-            'bqfmt': kwargs.get('bqfmt', DEFAULT_TEMPLATE['bqfmt'])
-        }
+        template = dict([
+            ('name', template_name),
+            ('qfmt', DEFAULT_TEMPLATE['qfmt']),
+            ('did', None),
+            ('bafmt', DEFAULT_TEMPLATE['bafmt']),
+            ('afmt', DEFAULT_TEMPLATE['afmt']),
+            ('ord', ordering),
+            ('bqfmt', DEFAULT_TEMPLATE['bqfmt'])
+        ])
+
+        for k, v in template.items():
+            if k in kwargs.keys():
+                template[k] = kwargs[k]
 
         return template
 
@@ -129,14 +149,18 @@ class AnkiContentCreator:
             ('guid', guid64()),
             ('mid', model_id),
             ('mod', modified),
-            ('usn', kwargs.get('usn', -1)),
+            ('usn', -1),
             ('tags', ' '.join(tags_list)),
             ('flds', '\x1f'.join(flds_list)),
             ('sfld', sfld),
             ('csum', sha1(sfld.encode('utf8')).hexdigest()),
-            ('flags', kwargs.get('flags', 0)),
-            ('data', kwargs.get('data', ''))
+            ('flags', 0),
+            ('data', '')
         ])
+
+        for k, v in note.items():
+            if k in kwargs.keys():
+                note[k] = kwargs[k]
 
         assert len(note) == 11, 'Invalid Anki Note format.'
 
@@ -149,44 +173,101 @@ class AnkiContentCreator:
             ('did', deck_id),
             ('ord', ordering),
             ('mod', modified),
-            ('usn', kwargs.get('usn', -1)),
-            ('type', kwargs.get('type', 0)),
-            ('queue', kwargs.get('queue', 0)),
-            ('due', kwargs.get('due', note_id)),
-            ('ivl', kwargs.get('ivl', 0)),
-            ('factor', kwargs.get('factor', 0)),
-            ('reps', kwargs.get('reps', 0)),
-            ('lapses', kwargs.get('lapses', 0)),
-            ('left', kwargs.get('left', 0)),
-            ('odue', kwargs.get('odue', 0)),
-            ('odid', kwargs.get('odid', 0)),
-            ('flags', kwargs.get('flags', 0)),
-            ('data', kwargs.get('data', ''))
+            ('usn', -1),
+            ('type', 0),
+            ('queue', 0),
+            ('due', note_id),  # Due is used differently for different card types:
+                               #   new: note id or random int
+                               #   due: integer day, relative to the collection's creation time
+                               #   learning: integer timestamp
+            ('ivl', 0),
+            ('factor', 0),
+            ('reps', 0),
+            ('lapses', 0),
+            ('left', 0),
+            ('odue', 0),
+            ('odid', 0),
+            ('flags', 0),
+            ('data', '')
         ])
+
+        for k, v in card.items():
+            if k in kwargs.keys():
+                card[k] = kwargs[k]
 
         assert len(card) == 18, 'Invalid Anki Card format.'
 
         return card
 
     def new_deck(self, deck_name, **kwargs):
-        deck = {
-            'desc': kwargs.get('desc', ''),
-            'name': deck_name,
-            'extendRev': kwargs.get('extendRev', 50),
-            'usn': kwargs.get('usn', 0),
-            'collapsed': kwargs.get('collapsed', False),
-            'newToday': kwargs.get('newToday', [0, 0]),
-            'timeToday': kwargs.get('timeToday', [0, 0]),
-            'dyn': kwargs.get('dyn', 0),
-            'extendNew': kwargs.get('extendNew', 10),
-            'conf': kwargs.get('conf', 1),
-            'revToday': kwargs.get('revToday', [0, 0]),
-            'lrnToday': kwargs.get('lrnToday', [0, 0]),
-            'id': self._unique_id('decks'),
-            'mod': int(time())
-        }
+        deck = dict([
+            ('desc', ''),
+            ('name', deck_name),
+            ('extendRev', 50),
+            ('usn', 0),
+            ('collapsed', False),
+            ('newToday', [0, 0]),
+            ('timeToday', [0, 0]),
+            ('dyn', 0),
+            ('extendNew', 10),
+            ('conf', 1),
+            ('revToday', [0, 0]),
+            ('lrnToday', [0, 0]),
+            ('id', self._unique_id('decks')),
+            ('mod', int(time()))
+        ])
+
+        for k, v in deck.items():
+            if k in kwargs.keys():
+                deck[k] = kwargs[k]
 
         return deck
+
+    def new_collection(self, modified: int=None, models=None, decks=None, **kwargs):
+        """
+
+        :param int modified:
+        :param OrderedDict models:
+        :param OrderedDict decks:
+        :param kwargs:
+        :return:
+        """
+        if modified is None:
+            modified = int(time() * 1000)
+        if models is None:
+            models = DEFAULT_COLLECTION['models']
+        if decks is None:
+            decks = DEFAULT_COLLECTION['decks']
+
+        collection = OrderedDict([
+            ('id', 1),
+            ('crt', int(time())),
+            ('mod', modified),
+            ('scm', int(time() * 1000)),
+            ('ver', DEFAULT_COLLECTION['ver']),
+            ('dty', 0),
+            ('usn', 0),
+            ('ls', 0),
+            ('conf', DEFAULT_COLLECTION['conf']),
+            ('models', models),
+            ('decks', decks),
+            ('dconf', DEFAULT_COLLECTION['dconf']),
+            ('tags', DEFAULT_COLLECTION['tags'])
+        ])
+
+        for k, v in kwargs.items():
+            if k in collection.keys():
+                collection[k] = v
+
+        return self.stringify_for_sqlite('col', collection)
+
+    @staticmethod
+    def stringify_for_sqlite(item_type, item):
+        for header_item, is_json in IS_JSON[item_type].items():
+            if is_json:
+                item[header_item] = json.dumps(item[header_item], default=lambda obj: obj.__dict__)
+
+        return item
 
     def _unique_id(self, item_type: str):
         item_id = int(time() * 1000)

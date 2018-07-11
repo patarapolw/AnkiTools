@@ -78,7 +78,7 @@ class AnkiExcelSync:
 
             # This will further be "string-formatted", so it needs to be deep-copied.
             # Currently implemented using a ReadOnlyJsonObject object.
-            payload['definitions'][sheet_name] = DEFAULT_API_MODEL_DEFINITION
+            payload['definitions'][sheet_name] = DEFAULT_API_MODEL_DEFINITION.to_json_object()
 
             payload['definitions'][sheet_name]['templates'][0]['data']['qfmt'] = \
                 payload['definitions'][sheet_name]['templates'][0]['data']['qfmt'] % header[0]
