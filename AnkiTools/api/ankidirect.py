@@ -24,6 +24,7 @@ class AnkiDirect:
         do_init = False
         if not os.path.exists(anki_database):
             do_init = True
+
         self.conn = sqlite3.connect(anki_database)
         if do_init:
             write_anki_schema(self.conn)
@@ -70,7 +71,7 @@ class AnkiDirect:
             model_id = self._name_to_id['models'][model_name]
         except KeyError:
             anki_model = self.creator.new_model(model_name, model_header, model_definition,
-                                                     modified=kwargs.get('modified', None))
+                                                modified=kwargs.get('modified', None))
             self._id_to_record['models'][str(anki_model['id'])] = anki_model
             write_anki_json(self.conn, 'models', [anki_model], do_commit=True)
 

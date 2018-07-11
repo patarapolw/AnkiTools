@@ -64,9 +64,9 @@ class AnkiExcelSync:
             payload['data'][sheet_name] = list()
 
             row_iter = self.wb[sheet_name].iter_rows()
-            header = [cell.value for cell in next(row_iter)]
+            header = list(self.get_cell_value_iter(next(row_iter)))
             for row in row_iter:
-                record = OrderedDict(zip(header, [cell.value for cell in row]))
+                record = OrderedDict(zip(header, self.get_cell_value_iter(row)))
                 formatted_record = {
                     'data': record,
                     'decks': {
@@ -155,3 +155,12 @@ class AnkiExcelSync:
             wb[self.SHEET_DECKS].append(record)
 
         return wb
+
+    @staticmethod
+    def get_cell_value_iter(cell_iter):
+        for cell in cell_iter:
+            value = cell.value
+            if not value:
+                yield ''
+            else:
+                yield value

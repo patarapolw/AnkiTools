@@ -1,5 +1,6 @@
 import shutil
-import tempfile
+from tempfile import mkdtemp
+from tempfile import mktemp as temp_filename
 import os
 from zipfile import ZipFile
 
@@ -7,6 +8,9 @@ from .excel import AnkiExcelSync
 
 
 class AnkiFormatEditor:
+    def __init__(self):
+        self.tempdir = mkdtemp()
+
     def convert(self, in_file, out_file=None, out_format=None):
         in_file_type = os.path.splitext(in_file)[1]
 
@@ -34,8 +38,8 @@ class AnkiFormatEditor:
             self.unzip(in_file, out_file=out_file)
         elif conversion == ('.apkg', '.xlsx'):
             self.export_anki_sqlite(self.unzip(in_file,
-                                               os.path.join(tempfile.tempdir,
-                                                            next(tempfile._get_candidate_names()))),
+                                               os.path.join(self.tempdir,
+                                                            temp_filename())),
                                     out_file)
         elif conversion == ('.anki2', '.apkg'):
             self.zip(in_file, out_file)
@@ -48,11 +52,10 @@ class AnkiFormatEditor:
         else:
             raise Exception("Unsupported conversion.")
 
-    @staticmethod
-    def unzip(in_file, out_file):
+    def unzip(self, in_file, out_file):
         with ZipFile(in_file) as zf:
-            zf.extract('collection.anki2', path=tempfile.tempdir)
-        shutil.move(os.path.join(tempfile.tempdir, 'collection.anki2'),
+            zf.extract('collection.anki2', path=self.tempdir)
+        shutil.move(os.path.join(self.tempdir, 'collection.anki2'),
                     out_file)
 
         return out_file
@@ -68,10 +71,9 @@ class AnkiFormatEditor:
         with AnkiExcelSync(anki_database=in_file, excel=out_file) as sync_portal:
             sync_portal.to_excel()
 
-    @staticmethod
-    def import_anki_sqlite(in_file, out_file=None, out_path=''):
+    def import_anki_sqlite(self, in_file, out_file=None, out_path=''):
         if out_file is None:
-            out_file = os.path.join(tempfile.tempdir, 'collection.anki2')
+            out_file = os.path.join(self.tempdir, 'collection.anki2')
 
         with AnkiExcelSync(anki_database=out_file, excel=in_file) as sync_portal:
             sync_portal.to_sqlite()
@@ -79,5 +81,5 @@ class AnkiFormatEditor:
         return os.path.join(out_path, out_file)
 
 
-def anki_convert(in_file, out_file=None, out_format=None):
+def anki_convert(in_file, out_file=None, out_format=None, out_path=None):
     AnkiFormatEditor().convert(in_file, out_file, out_format)

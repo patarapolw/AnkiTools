@@ -6,7 +6,7 @@ authors = ["Pacharapol Withayasakpunt <patarapolw@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 keywords = ['anki', 'ankiconnect']
-include = ["AnkiTools/*.json"]
+include = ["AnkiTools/*.json", "AnkiTools/*.anki2"]
 repository = "https://github.com/patarapolw/AnkiTools"
 homepage = "https://github.com/patarapolw/AnkiTools"
 

@@ -5,19 +5,19 @@ from collections import OrderedDict
 import json
 import tempfile
 
-from .getfile import get_file, get_parameters
+from .files import get_testing_file, get_testing_parameters
 
 from AnkiTools import AnkiDirect
 from AnkiTools.tools.path import get_collection_path
 
-test_parameters = get_parameters()['test_ankidirect']
+test_parameters = get_testing_parameters()['test_ankidirect']
 
 if 'CI' in os.environ or os.getenv('ANKI_APP_OPENED', '0') == '1':
-    default_collection = get_file('collection.anki2')
+    default_collection = get_testing_file('collection.anki2')
 else:
     default_collection = None
 
-collections = [default_collection] + [get_file(col) for col in json.loads(
+collections = [default_collection] + [get_testing_file(col) for col in json.loads(
     os.getenv('ANKI_ADDITIONAL_COLLECTIONS',
               json.dumps(["clean_collection.anki2", "dirty_collection.anki2"])))]
 ankidirects = dict()
