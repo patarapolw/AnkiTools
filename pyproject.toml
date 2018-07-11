@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "AnkiTools"
-version = "0.3.3"
+version = "0.3.4"
 description = "an Anki *.apkg and collection.anki2 reader and editor"
 authors = ["Pacharapol Withayasakpunt <patarapolw@gmail.com>"]
 license = "MIT"
@@ -22,3 +22,6 @@ psutil = "^5.4"
 pytest = "^3.6"
 pytest-readme = "^1.0"
 python-dotenv = "^0.8.2"
+sphinx = "^1.7"
+sphinx-autobuild = "^0.7.1"
+recommonmark = "^0.4.0"

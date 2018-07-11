@@ -41,6 +41,15 @@ class AnkiDirect:
 
         self.verify = AnkiContentVerify(self._id_to_record)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    def close(self):
+        self.conn.close()
+
     @property
     def data(self):
         data = {
