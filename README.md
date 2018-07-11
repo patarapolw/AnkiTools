@@ -77,7 +77,7 @@ where `notes.json` is
           }
         }
       ],
-      "css": tests
+      "css": ".card {\r\n font-family: arial;\r\n font-size: 20px;\r\n text-align: center;\r\n color: black;\r\n background-color: white;\r\n}\r\n"
     }
   }
 }
