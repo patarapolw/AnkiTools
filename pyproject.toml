@@ -20,6 +20,5 @@ psutil = "^5.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.6"
-pytest-doctestplus = "^0.1.3"
 pytest-readme = "^1.0"
 python-dotenv = "^0.8.2"
