@@ -100,18 +100,13 @@ ENV/
 # mypy
 .mypy_cache/
 
-# sample
-apkg/
-anki2/
+# User sample
+user/
+!user/.env
+
+# Temporary directories
 tmp/
 temp/
-testfile/
-*.apkg
-*.anki2
-*.xlsx
-*.tsv
-*.csv
-*.sqlite
 
 # Large Jupyter Notebook files
 *.ipynb

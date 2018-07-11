@@ -34,7 +34,7 @@ from AnkiTools import AnkiDirect
 
 
 if __name__ == '__main__':
-    with open('notes.json') as f:
+    with open(add_info.json) as f:
         data = json.load(f, object_pairs_hook=OrderedDict)
 
     api = AnkiDirect()
@@ -77,7 +77,7 @@ where `notes.json` is
           }
         }
       ],
-      "css": "This is a test css."
+      "css": tests
     }
   }
 }

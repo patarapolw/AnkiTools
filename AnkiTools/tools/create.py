@@ -3,8 +3,8 @@ from collections import OrderedDict
 from bs4 import BeautifulSoup
 from hashlib import sha1
 
-from AnkiTools.tools.defaults import DEFAULT_TEMPLATE, DEFAULT_MODEL, DEFAULT_API_MODEL_DEFINITION
-from AnkiTools.tools.guid import guid64
+from .defaults import DEFAULT_TEMPLATE, DEFAULT_MODEL, DEFAULT_API_MODEL_DEFINITION
+from .guid import guid64
 
 
 class AnkiContentCreator:
