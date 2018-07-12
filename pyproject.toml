@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "AnkiTools"
-version = "0.3.4"
+version = "0.3.7"
 description = "an Anki *.apkg and collection.anki2 reader and editor"
 authors = ["Pacharapol Withayasakpunt <patarapolw@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 keywords = ['anki', 'ankiconnect']
-include = ["AnkiTools/*.json", "AnkiTools/*.anki2"]
+include = ["AnkiTools/*.json", "AnkiTools/*.anki2", "AnkiTools/excel/*.xlsx"]
 repository = "https://github.com/patarapolw/AnkiTools"
 homepage = "https://github.com/patarapolw/AnkiTools"
 
@@ -17,11 +17,8 @@ bs4 = "^0.0.1"
 appdirs = "^1.4"
 openpyxl = "^2.5"
 psutil = "^5.4"
+pyexcel-xlsx = "^0.5.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.6"
-pytest-readme = "^1.0"
 python-dotenv = "^0.8.2"
-sphinx = "^1.7"
-sphinx-autobuild = "^0.7.1"
-recommonmark = "^0.4.0"

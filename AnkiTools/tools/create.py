@@ -7,8 +7,7 @@ import json
 from .defaults import (DEFAULT_COLLECTION,
                        DEFAULT_TEMPLATE,
                        DEFAULT_MODEL,
-                       DEFAULT_API_MODEL_DEFINITION,
-                       IS_JSON)
+                       DEFAULT_API_MODEL_DEFINITION)
 from .guid import guid64
 
 
@@ -248,26 +247,26 @@ class AnkiContentCreator:
             ('dty', 0),
             ('usn', 0),
             ('ls', 0),
-            ('conf', DEFAULT_COLLECTION['conf']),
-            ('models', models),
-            ('decks', decks),
-            ('dconf', DEFAULT_COLLECTION['dconf']),
-            ('tags', DEFAULT_COLLECTION['tags'])
+            ('conf', json.dumps(DEFAULT_COLLECTION['conf'])),
+            ('models', json.dumps(models)),
+            ('decks', json.dumps(decks)),
+            ('dconf', json.dumps(DEFAULT_COLLECTION['dconf'])),
+            ('tags', json.dumps(DEFAULT_COLLECTION['tags']))
         ])
 
         for k, v in kwargs.items():
             if k in collection.keys():
                 collection[k] = v
 
-        return self.stringify_for_sqlite('col', collection)
+        return collection
 
-    @staticmethod
-    def stringify_for_sqlite(item_type, item):
-        for header_item, is_json in IS_JSON[item_type].items():
-            if is_json:
-                item[header_item] = json.dumps(item[header_item], default=lambda obj: obj.__dict__)
-
-        return item
+    # @staticmethod
+    # def stringify_for_sqlite(item_type, item):
+    #     for header_item, is_json in IS_JSON[item_type].items():
+    #         if is_json:
+    #             item[header_item] = json.dumps(item[header_item], default=lambda obj: obj.__dict__)
+    #
+    #     return item
 
     def _unique_id(self, item_type: str):
         item_id = int(time() * 1000)

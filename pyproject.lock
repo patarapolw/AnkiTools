@@ -104,6 +104,15 @@ python-versions = "*"
 version = "1.4"
 
 [[package]]
+category = "main"
+description = "Load me later. A lazy loading plugin management system."
+name = "lml"
+optional = false
+platform = "UNKNOWN"
+python-versions = "*"
+version = "0.0.1"
+
+[[package]]
 category = "dev"
 description = "More routines for operating on iterables, beyond itertools"
 name = "more-itertools"
@@ -156,6 +165,31 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.5.4"
 
 [[package]]
+category = "main"
+description = "A python library to read and write structured data in csv, zipped csvformat and to/from databases"
+name = "pyexcel-io"
+optional = false
+platform = "*"
+python-versions = "*"
+version = "0.5.7"
+
+[package.dependencies]
+lml = "0.0.1"
+
+[[package]]
+category = "main"
+description = "A wrapper library to read, manipulate and write data in xlsx and xlsmformat"
+name = "pyexcel-xlsx"
+optional = false
+platform = "*"
+python-versions = "*"
+version = "0.5.6"
+
+[package.dependencies]
+openpyxl = ">=2.5.0"
+pyexcel-io = ">=0.5.3"
+
+[[package]]
 category = "dev"
 description = "pytest: simple powerful testing with Python"
 name = "pytest"
@@ -176,18 +210,6 @@ six = ">=1.10.0"
 [package.dependencies.colorama]
 platform = "win32"
 version = "*"
-
-[[package]]
-category = "dev"
-description = "Test your README.md file"
-name = "pytest-readme"
-optional = false
-platform = "UNKNOWN"
-python-versions = "*"
-version = "1.0.0"
-
-[package.dependencies]
-pytest = "*"
 
 [[package]]
 category = "dev"
@@ -232,7 +254,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4"
 version = "1.23"
 
 [metadata]
-content-hash = "a9ce85e4eb7cde212cb4bf32680cd03a6c1e8a5ab74535a43c11c7fc87251b6d"
+content-hash = "223762ea4f9ede8c29abdd31a1d10b7d298732a7c67454c8b7ec53a669a2c58f"
 platform = "*"
 python-versions = ">=3.5"
 
@@ -248,13 +270,15 @@ colorama = ["463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda", 
 et-xmlfile = ["614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b"]
 idna = ["156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e", "684a38a6f903c1d71d6d5fac066b58d7768af4de2b832e426ec79c30daa94a16"]
 jdcal = ["948fb8d079e63b4be7a69dd5f0cd618a0a57e80753de8248fd786a8a20658a07", "ea0a5067c5f0f50ad4c7bdc80abad3d976604f6fb026b0b3a17a9d84bb9046c9"]
+lml = ["12783c8851bb1b1aacf6d139aa41fb529e1723bff863e71034af07a55bf1e5a3", "58a11170ecb0ce5e4680ad8971f1e353b795d58953217d65c9a56e0d774261d6"]
 more-itertools = ["2b6b9893337bfd9166bee6a62c2b0c9fe7735dcf85948b387ec8cba30e85d8e8", "6703844a52d3588f951883005efcf555e49566a48afd4db4e965d69b883980d3", "a18d870ef2ffca2b8463c0070ad17b5978056f403fb64e3f15fe62a52db21cc0"]
 openpyxl = ["9239b74faf175dc4276a5fc277655fc53c2f704ded39e680d35e6a39e1913f69"]
 pluggy = ["7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff", "d345c8fe681115900d6da8d048ba67c25df42973bda370783cd58826442dcd7c", "e160a7fcf25762bb60efc7e171d4497ff1d8d2d75a3d0df7a21b76821ecbf5c5"]
 psutil = ["0ff2b16e9045d01edb1dd10d7fbcc184012e37f6cd38029e959f2be9c6223f50", "254adb6a27c888f141d2a6032ae231d8ed4fc5f7583b4c825e5f7d7c78d26d2e", "319e12f6bae4d4d988fbff3bed792953fa3b44c791f085b0a1a230f755671ef7", "529ae235896efb99a6f77653a7138273ab701ec9f0343a1f5030945108dee3c4", "686e5a35fe4c0acc25f3466c32e716f2d498aaae7b7edc03e2305b682226bcf6", "6d981b4d863b20c8ceed98b8ac3d1ca7f96d28707a80845d360fa69c8fc2c44b", "7789885a72aa3075d28d028236eb3f2b84d908f81d38ad41769a6ddc2fd81b7c", "7f4616bcb44a6afda930cfc40215e5e9fa7c6896e683b287c771c937712fbe2f", "7fdb3d02bfd68f508e6745021311a4a4dbfec53fca03721474e985f310e249ba", "a9b85b335b40a528a8e2a6b549592138de8429c6296e7361892958956e6a73cf", "dc85fad15ef98103ecc047a0d81b55bbf5fe1b03313b96e883acc2e2fa87ed5c"]
 py = ["3fd59af7435864e1a243790d322d763925431213b6b8529c6ca71081ace3bbf7", "e31fb2767eb657cbde86c454f02e99cb846d3cd9d61b318525140214fdc0e98e"]
+pyexcel-io = ["5cf5ccf7750ca130640277f31178b6284a4f9f0f0d1d41f28f419b67ce26132b", "d0639851fce803c772ccf0b8ec975f212cb64b6681b63d67e89a2ea238c0afdb"]
+pyexcel-xlsx = ["4b406c0ec64c577a171335ab3bca8acd3bc845b5c99691c3600d11c284091435", "4e1f953427ac5073ee7e42d30e7108f24fde475e58e24822033fdc90a6131291"]
 pytest = ["0453c8676c2bee6feb0434748b068d5510273a916295fd61d306c4f22fbfd752", "4b208614ae6d98195430ad6bde03641c78553acee7c83cec2e85d613c0cd383d"]
-pytest-readme = ["ae01ea17af4d9f5c70025912a250193bf96cb9d48f949f1e9ce0bf46e312c8db"]
 python-dotenv = ["4965ed170bf51c347a89820e8050655e9c25db3837db6602e906b6d850fad85c", "509736185257111613009974e666568a1b031b028b61b500ef1ab4ee780089d5"]
 requests = ["63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1", "ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a"]
 six = ["70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9", "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"]

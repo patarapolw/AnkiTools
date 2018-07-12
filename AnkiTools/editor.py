@@ -1,10 +1,9 @@
 import shutil
-from tempfile import mkdtemp
-from tempfile import mktemp as temp_filename
+from tempfile import mkdtemp, mktemp
 import os
 from zipfile import ZipFile
 
-from .excel import AnkiExcelSync
+from .excel.app import AnkiExcelSync
 
 
 class AnkiFormatEditor:
@@ -38,8 +37,7 @@ class AnkiFormatEditor:
             self.unzip(in_file, out_file=out_file)
         elif conversion == ('.apkg', '.xlsx'):
             self.export_anki_sqlite(self.unzip(in_file,
-                                               os.path.join(self.tempdir,
-                                                            temp_filename())),
+                                               os.path.join(self.tempdir, mktemp())),
                                     out_file)
         elif conversion == ('.anki2', '.apkg'):
             self.zip(in_file, out_file)
@@ -68,14 +66,14 @@ class AnkiFormatEditor:
 
     @staticmethod
     def export_anki_sqlite(in_file, out_file):
-        with AnkiExcelSync(anki_database=in_file, excel=out_file) as sync_portal:
+        with AnkiExcelSync(anki_database=in_file, excel_filename=out_file) as sync_portal:
             sync_portal.to_excel()
 
     def import_anki_sqlite(self, in_file, out_file=None, out_path=''):
         if out_file is None:
             out_file = os.path.join(self.tempdir, 'collection.anki2')
 
-        with AnkiExcelSync(anki_database=out_file, excel=in_file) as sync_portal:
+        with AnkiExcelSync(anki_database=out_file, excel_filename=in_file, read_only=True) as sync_portal:
             sync_portal.to_sqlite()
 
         return os.path.join(out_path, out_file)

@@ -10,3 +10,7 @@ ROOT = os.path.abspath(os.path.dirname(inspect.getframeinfo(inspect.currentframe
 
 def module_path(filename):
     return os.path.join(ROOT, filename)
+
+
+def excel_path(filename):
+    return os.path.join(ROOT, 'excel', filename)
