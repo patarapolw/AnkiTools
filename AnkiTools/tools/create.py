@@ -2,12 +2,10 @@ from time import time
 from collections import OrderedDict
 from bs4 import BeautifulSoup
 from hashlib import sha1
-import json
+import simplejson as json
 
-from .defaults import (DEFAULT_COLLECTION,
-                       DEFAULT_TEMPLATE,
-                       DEFAULT_MODEL,
-                       DEFAULT_API_MODEL_DEFINITION)
+from .defaults import DEFAULT_API_MODEL_DEFINITION, DEFAULT_MODEL, DEFAULT_COLLECTION
+from .records import (ModelRecord, TemplateRecord, FieldRecord, NoteRecord, CardRecord, DeckRecord, CollectionRecord)
 from .guid import guid64
 
 
@@ -27,6 +25,8 @@ class AnkiContentCreator:
             }
 
         self.ids = dict()
+        self.guids = set()
+
         for k, v in ids.items():
             self.ids[k] = set(ids[k].keys())
 
@@ -56,33 +56,23 @@ class AnkiContentCreator:
 
         model_id = self._unique_id('models')
 
-        model = dict([
-            ("vers", []),
-            ("name", model_name),
-            ("tags", []),
-            ("did", None),
-            ("usn", -1),
-            ("req", [[0, "all", [0]]]),
-            ("flds", [self.new_field(field_name, i, **kwargs.get('flds_kwargs', dict()))
-                      for i, field_name in enumerate(model_header)]),
-            ("sortf", 0),
-            ("latexPre", DEFAULT_MODEL['latexPre']),
-            ("tmpls", tmpls),
-            ("latexPost", DEFAULT_MODEL['latexPost']),
-            ("type", 0),
-            ("id", model_id),
-            ("css", css),
-            ("mod", modified)
-        ])
+        model = ModelRecord()
+        model._update(kwargs)
 
-        for k, v in model.items():
-            if k in kwargs.keys():
-                model[k] = kwargs[k]
+        model.id = model_id
+        model.tmpls = tmpls
+        model.css = css
+        model.mod = modified
+
+        model.name = model_name
+        model.flds = [self.new_field(field_name, i, **kwargs.get('flds_kwargs', dict()))
+                      for i, field_name in enumerate(model_header)]
+
+        self.creation_check(model)
 
         return model
 
-    @staticmethod
-    def new_field(field_name: str, ordering: int, **kwargs):
+    def new_field(self, field_name: str, ordering: int, **kwargs):
         """
         Fields have no unique ID.
         :param field_name:
@@ -90,48 +80,43 @@ class AnkiContentCreator:
         :param kwargs:
         :return:
         """
-        field = dict([
-            ('name', field_name),
-            ('rtl', False),
-            ('sticky', False),
-            ('media', []),
-            ('ord', ordering),
-            ('font', 'Arial'),
-            ('size', 12)
-        ])
+        field = FieldRecord()
+        field._update(kwargs)
 
-        for k, v in field.items():
-            if k in kwargs.keys():
-                field[k] = kwargs[k]
+        field.name = field_name
+        field.ord = ordering
+
+        self.creation_check(field)
 
         return field
 
-    @staticmethod
-    def new_template(template_name: str, ordering: int, formatting: dict=None, **kwargs):
+    def new_template(self, template_name: str, ordering: int, formatting: dict=None, header: list=None,
+                     **kwargs):
         """
         Templates have no unique ID.
         :param template_name:
         :param ordering:
         :param formatting:
+        :param list of str header: header names / keys of a note
         :param kwargs:
         :return:
         """
-        if formatting is not None:
-            kwargs.update(formatting)
+        if formatting is None:
+            default_tmpl = DEFAULT_API_MODEL_DEFINITION['templates'][0]
+            formatting = {
+                'qfmt': default_tmpl['data']['qfmt'] % header[0],
+                'afmt': default_tmpl['data']['afmt'] % header[1]
+            }
 
-        template = dict([
-            ('name', template_name),
-            ('qfmt', DEFAULT_TEMPLATE['qfmt']),
-            ('did', None),
-            ('bafmt', DEFAULT_TEMPLATE['bafmt']),
-            ('afmt', DEFAULT_TEMPLATE['afmt']),
-            ('ord', ordering),
-            ('bqfmt', DEFAULT_TEMPLATE['bqfmt'])
-        ])
+        kwargs.update(**formatting)
 
-        for k, v in template.items():
-            if k in kwargs.keys():
-                template[k] = kwargs[k]
+        template = TemplateRecord()
+        template._update(kwargs)
+
+        template.name = template_name
+        template.ord = ordering
+
+        self.creation_check(template)
 
         return template
 
@@ -141,132 +126,87 @@ class AnkiContentCreator:
         if modified is None:
             modified = int(time())
 
-        sfld = BeautifulSoup(flds_list[0], 'html.parser').text
+        sfld = BeautifulSoup(str(flds_list[0]), 'html.parser').text
 
-        note = OrderedDict([
-            ('id', self._unique_id('notes')),
-            ('guid', guid64()),
-            ('mid', model_id),
-            ('mod', modified),
-            ('usn', -1),
-            ('tags', ' '.join(tags_list)),
-            ('flds', '\x1f'.join(flds_list)),
-            ('sfld', sfld),
-            ('csum', sha1(sfld.encode('utf8')).hexdigest()),
-            ('flags', 0),
-            ('data', '')
-        ])
+        note = NoteRecord()
+        note._update(kwargs)
 
-        for k, v in note.items():
-            if k in kwargs.keys():
-                note[k] = kwargs[k]
+        note.id = self._unique_id('notes')
+        note.guid = self._unique_guid()
+        note.mid = model_id
 
-        assert len(note) == 11, 'Invalid Anki Note format.'
+        note.mod = modified
+        note.flds = '\u001f'.join([str(fld) for fld in flds_list])
+        note.sfld = sfld
+        note.csum = sha1(sfld.encode('utf8')).hexdigest()
+        note.tags = ' '.join(tags_list)
+
+        self.creation_check(note)
 
         return note
 
     def new_card(self, note_id: int, deck_id: int, ordering: int, modified: int, **kwargs):
-        card = OrderedDict([
-            ('id', self._unique_id('cards')),
-            ('nid', note_id),
-            ('did', deck_id),
-            ('ord', ordering),
-            ('mod', modified),
-            ('usn', -1),
-            ('type', 0),
-            ('queue', 0),
-            ('due', note_id),  # Due is used differently for different card types:
-                               #   new: note id or random int
-                               #   due: integer day, relative to the collection's creation time
-                               #   learning: integer timestamp
-            ('ivl', 0),
-            ('factor', 0),
-            ('reps', 0),
-            ('lapses', 0),
-            ('left', 0),
-            ('odue', 0),
-            ('odid', 0),
-            ('flags', 0),
-            ('data', '')
-        ])
+        card = CardRecord()
+        card._update(kwargs)
 
-        for k, v in card.items():
-            if k in kwargs.keys():
-                card[k] = kwargs[k]
+        card.id = self._unique_id('cards')
+        card.nid = note_id
+        card.did = deck_id
+        card.ord = ordering
+        card.mod = modified
+        card.due = note_id
 
-        assert len(card) == 18, 'Invalid Anki Card format.'
+        self.creation_check(card)
 
         return card
 
     def new_deck(self, deck_name, **kwargs):
-        deck = dict([
-            ('desc', ''),
-            ('name', deck_name),
-            ('extendRev', 50),
-            ('usn', 0),
-            ('collapsed', False),
-            ('newToday', [0, 0]),
-            ('timeToday', [0, 0]),
-            ('dyn', 0),
-            ('extendNew', 10),
-            ('conf', 1),
-            ('revToday', [0, 0]),
-            ('lrnToday', [0, 0]),
-            ('id', self._unique_id('decks')),
-            ('mod', int(time()))
-        ])
+        deck = DeckRecord()
+        deck._update(kwargs)
 
-        for k, v in deck.items():
-            if k in kwargs.keys():
-                deck[k] = kwargs[k]
+        deck.name = deck_name
+        deck.mod = int(time())
+
+        self.creation_check(deck)
 
         return deck
 
-    def new_collection(self, modified: int=None, models=None, decks=None, **kwargs):
+    def new_collection(self, modified: int=None, models_list=None, decks_list=None, **kwargs):
         """
 
         :param int modified:
-        :param OrderedDict models:
-        :param OrderedDict decks:
+        :param list of ModelRecord models_list:
+        :param list of DeckRecord decks_list:
         :param kwargs:
         :return:
         """
         if modified is None:
             modified = int(time() * 1000)
-        if models is None:
-            models = DEFAULT_COLLECTION['models']
-        if decks is None:
-            decks = DEFAULT_COLLECTION['decks']
 
-        collection = OrderedDict([
-            ('id', 1),
-            ('crt', int(time())),
-            ('mod', modified),
-            ('scm', int(time() * 1000)),
-            ('ver', DEFAULT_COLLECTION['ver']),
-            ('dty', 0),
-            ('usn', 0),
-            ('ls', 0),
-            ('conf', json.dumps(DEFAULT_COLLECTION['conf'])),
-            ('models', json.dumps(models)),
-            ('decks', json.dumps(decks)),
-            ('dconf', json.dumps(DEFAULT_COLLECTION['dconf'])),
-            ('tags', json.dumps(DEFAULT_COLLECTION['tags']))
-        ])
+        if models_list is None:
+            models_dict = DEFAULT_COLLECTION['models']
+        else:
+            models_dict = dict()
+            for model in models_list:
+                models_dict[model.id] = model
 
-        for k, v in kwargs.items():
-            if k in collection.keys():
-                collection[k] = v
+        if decks_list is None:
+            decks_dict = DEFAULT_COLLECTION['decks']
+        else:
+            decks_dict = dict()
+            for deck in decks_list:
+                decks_dict[deck.id] = deck
+
+        collection = CollectionRecord()
+        collection._update(kwargs)
+
+        collection.mod = modified
+        collection.models = kwargs.get('models', json.dumps(models_dict))
+        collection.decks = kwargs.get('decks', json.dumps(decks_dict))
+
+        self.creation_check(collection)
 
         return collection
-
-    # @staticmethod
-    # def stringify_for_sqlite(item_type, item):
-    #     for header_item, is_json in IS_JSON[item_type].items():
-    #         if is_json:
-    #             item[header_item] = json.dumps(item[header_item], default=lambda obj: obj.__dict__)
-    #
-    #     return item
 
     def _unique_id(self, item_type: str):
         item_id = int(time() * 1000)
@@ -275,3 +215,15 @@ class AnkiContentCreator:
         self.ids[item_type].add(item_id)
 
         return item_id
+
+    def _unique_guid(self):
+        guid = guid64()
+        while guid in self.guids:
+            guid = guid64()
+
+        return guid
+
+    @staticmethod
+    def creation_check(namedlist):
+        for item_type, item in namedlist._asdict().items():
+            assert item is not NotImplemented, "{} is NotImplemented".format(item_type)

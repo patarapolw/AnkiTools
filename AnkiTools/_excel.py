@@ -4,11 +4,15 @@ from openpyxl.utils import get_column_letter
 from collections import OrderedDict, namedtuple
 from time import time
 from datetime import datetime
-import json
+import simplejson as json
 import logging
 
-from .api.ankidirect import AnkiDirect
+from .api.app import AnkiDirect
 from .tools.defaults import DEFAULT_API_MODEL_DEFINITION
+
+record_logger = logging.getLogger('record')
+info_logger = logging.getLogger('info')
+
 
 DeckTuple = namedtuple('DeckTuple', ['deck_id', 'deck_name'])
 CardTuple = namedtuple('CardTuple', ['card_id', 'note_id', 'deck_name', 'template_order'])
@@ -109,7 +113,7 @@ class AnkiExcelSync:
         model_id_to_name = dict()
         for model_id, model_dict in models.items():
             sheet_name = model_dict['name']
-            logging.info('Creating sheet {}'.format(sheet_name))
+            info_logger.info('Creating sheet {}'.format(sheet_name))
 
             # Writing header
             if sheet_name not in wb.sheetnames:
@@ -144,7 +148,7 @@ class AnkiExcelSync:
                 continue
 
             # Writing record
-            logging.info('Creating note {} - {}'.format(note['id'],
+            record_logger.info('Creating note {} - {}'.format(note['id'],
                                                         json.dumps(note['formatted_flds'], ensure_ascii=False)))
 
             record = [note['id']]

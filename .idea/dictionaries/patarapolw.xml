@@ -8,8 +8,12 @@
       <w>ankidirects</w>
       <w>flds</w>
       <w>openpyxl</w>
+      <w>preformatted</w>
+      <w>pytest</w>
       <w>qfmt</w>
       <w>tmpl</w>
+      <w>unescape</w>
+      <w>unformatted</w>
       <w>xlsx</w>
     </words>
   </dictionary>

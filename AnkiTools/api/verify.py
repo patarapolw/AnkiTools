@@ -1,3 +1,8 @@
+import logging
+
+debug_logger = logging.getLogger('debug')
+
+
 class AnkiContentVerify:
     def __init__(self, anki_content):
         self.anki_content = anki_content
@@ -5,7 +10,7 @@ class AnkiContentVerify:
     def missing_decks(self):
         deck_dirs = set()
         for deck in self.anki_content['decks'].values():
-            deck_dirs.add(tuple(deck['name'].split('::')))
+            deck_dirs.add(tuple(getattr(deck, 'name').split('::')))
 
         new_deck_names = set()
         for deck_dir in deck_dirs:
@@ -18,21 +23,21 @@ class AnkiContentVerify:
 
     def get_model_id(self, model_name):
         for model_id, model in self.anki_content['models'].items():
-            if model['name'] == model_name:
+            if getattr(model, 'name') == model_name:
                 return model_id
 
         return None
 
     def check_header(self, header, model_id):
         for header_item in header:
-            if header_item not in (fld['name'] for fld in self.anki_content['models'][model_id]['flds']):
+            if header_item not in (fld.name for fld in self.anki_content['models'][model_id].flds):
                 return False
 
         return True
 
     def check_card_sides(self, card_sides, model_id):
         for card_side in card_sides:
-            if card_side not in (tmpl['name'] for tmpl in self.anki_content['models'][model_id]['tmpls']):
+            if card_side not in (tmpl.name for tmpl in self.anki_content['models'][model_id].tmpls):
                 return False
 
         return True

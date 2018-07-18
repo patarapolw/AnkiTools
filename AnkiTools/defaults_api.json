@@ -1,14 +1,55 @@
 {
-  "model_definition": {
-    "templates": [
-      {
-        "name": "Card 1",
-        "data": {
-          "qfmt": "{{%s}}",
-          "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{%s}}"
+  "payload": {
+    "minimal": {
+      "model_definition": {
+        "templates": [
+          {
+            "name": "Card 1",
+            "data": {
+              "qfmt": "{{%s}}",
+              "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{%s}}"
+            }
+          }
+        ],
+        "css": null
+      }
+    },
+    "complete": {
+      "data": {
+        "\\note_type": [
+          {
+            "data": {
+              "\\header0": "\\content0",
+              "\\header1": "\\content1"
+            },
+            "decks": {
+              "\\forward": "\\note_type::\\forward",
+              "\\backward": "\\note_type::\\backward"
+            }
+          }
+        ]
+      },
+      "definitions": {
+        "\\note_type": {
+          "templates": [
+            {
+              "name": "\\forward",
+              "data": {
+                "qfmt": "{{\\header0}}",
+                "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{\\header1}}"
+              }
+            },
+            {
+              "name": "\\backward",
+              "data": {
+                "qfmt": "{{\\header1}}",
+                "afmt": "{{FrontSide}}\r\n\r\n<hr id=answer>\r\n\r\n{{\\header0}}"
+              }
+            }
+          ],
+          "css": ".card {\r\n font-family: arial;\r\n font-size: 20px;\r\n text-align: center;\r\n color: black;\r\n background-color: white;\r\n}"
         }
       }
-    ],
-    "css": null
+    }
   }
 }

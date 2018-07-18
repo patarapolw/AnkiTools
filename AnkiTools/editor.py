@@ -4,6 +4,7 @@ import os
 from zipfile import ZipFile
 
 from .excel.app import AnkiExcelSync
+from .tools.verify import is_valid_anki
 
 
 class AnkiFormatEditor:
@@ -31,6 +32,9 @@ class AnkiFormatEditor:
             out_file = '{}{}'.format(out_file_header, out_file_type)
 
         assert in_file_type != out_file_type, 'File types must be different'
+
+        if in_file_type in ('.anki2', '.apkg') and out_file_type == '.apkg':
+            assert is_valid_anki(in_file)
 
         conversion = (in_file_type, out_file_type)
         if conversion == ('.apkg', '.anki2'):
@@ -77,7 +81,3 @@ class AnkiFormatEditor:
             sync_portal.to_sqlite()
 
         return os.path.join(out_path, out_file)
-
-
-def anki_convert(in_file, out_file=None, out_format=None, out_path=None):
-    AnkiFormatEditor().convert(in_file, out_file, out_format)

@@ -1,3 +1,3 @@
 from .ankiconnect import AnkiConnect
-from .api.ankidirect import AnkiDirect
-from .editor import anki_convert
+from .api.app import AnkiDirect
+# from .convert import anki_convert

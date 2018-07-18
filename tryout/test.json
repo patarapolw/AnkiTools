@@ -1,0 +1,19 @@
+{
+  "vers": [], "name": "Chinese Hanzi Freq", "tags": [],
+  "did": 1514342021465,
+  "usn": -1,
+  "req": [
+    [0, "any", [2, 5]],
+    [1, "all", [1]],
+    [2, "all", [1]]
+  ],
+  "flds": [],
+  "sortf": 7,
+  "tmpls": [],
+  "mod": 1531293378,
+  "latexPost": "\\end{document}",
+  "type": 0,
+  "id": 1514177308904,
+  "css": "",
+  "latexPre": ""
+}

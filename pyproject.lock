@@ -86,6 +86,15 @@ python-versions = "*"
 version = "1.0.1"
 
 [[package]]
+category = "dev"
+description = "Clean single-source support for Python 3 and 2"
+name = "future"
+optional = false
+platform = "UNKNOWN"
+python-versions = "*"
+version = "0.16.0"
+
+[[package]]
 category = "main"
 description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
@@ -93,6 +102,19 @@ optional = false
 platform = "*"
 python-versions = "*"
 version = "2.7"
+
+[[package]]
+category = "main"
+description = "Read resources from Python packages"
+name = "importlib-resources"
+optional = false
+platform = "*"
+python-versions = ">=2.7,!=3.0,!=3.1,!=3.2,!=3.3"
+version = "1.0.1"
+
+[package.dependencies]
+setuptools = "*"
+wheel = "*"
 
 [[package]]
 category = "main"
@@ -123,6 +145,15 @@ version = "4.2.0"
 
 [package.dependencies]
 six = ">=1.0.0,<2.0.0"
+
+[[package]]
+category = "main"
+description = "Similar to namedtuple, but instances are mutable."
+name = "namedlist"
+optional = false
+platform = "UNKNOWN"
+python-versions = "*"
+version = "1.7"
 
 [[package]]
 category = "main"
@@ -213,6 +244,19 @@ version = "*"
 
 [[package]]
 category = "dev"
+description = "Plugin configuring handlers for loggers from Python logging module."
+name = "pytest-logger"
+optional = false
+platform = "*"
+python-versions = "*"
+version = "0.3.0"
+
+[package.dependencies]
+future = "*"
+pytest = ">=2.9"
+
+[[package]]
+category = "dev"
 description = "Add .env support to your django/flask apps in development and deployments"
 name = "python-dotenv"
 optional = false
@@ -236,6 +280,15 @@ idna = ">=2.5,<2.8"
 urllib3 = ">=1.21.1,<1.24"
 
 [[package]]
+category = "main"
+description = "Simple, fast, extensible JSON encoder/decoder for Python"
+name = "simplejson"
+optional = false
+platform = "any"
+python-versions = ">=2.5, !=3.0.*, !=3.1.*, !=3.2.*"
+version = "3.16.0"
+
+[[package]]
 category = "dev"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
@@ -253,8 +306,17 @@ platform = "*"
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4"
 version = "1.23"
 
+[[package]]
+category = "main"
+description = "A built-package format for Python."
+name = "wheel"
+optional = false
+platform = "*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "0.31.1"
+
 [metadata]
-content-hash = "223762ea4f9ede8c29abdd31a1d10b7d298732a7c67454c8b7ec53a669a2c58f"
+content-hash = "5367ca79e3a2f4a349c595028cb3c04ffc0ed3fe777b53fb454bc223d63a331a"
 platform = "*"
 python-versions = ">=3.5"
 
@@ -268,10 +330,13 @@ certifi = ["13e698f54293db9f89122b0581843a782ad0934a4fe0172d2a980ba77fc61bb7", "
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 colorama = ["463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda", "48eb22f4f8461b1df5734a074b57042430fb06e1d61bd1e11b078c0fe6d7a1f1"]
 et-xmlfile = ["614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b"]
+future = ["e39ced1ab767b5936646cedba8bcce582398233d6a627067d4c6a454c90cfedb"]
 idna = ["156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e", "684a38a6f903c1d71d6d5fac066b58d7768af4de2b832e426ec79c30daa94a16"]
+importlib-resources = ["73f454e062ac149bafd262b18c1f9ebc91f53bd6474e028d1bf1c59ebd152efb"]
 jdcal = ["948fb8d079e63b4be7a69dd5f0cd618a0a57e80753de8248fd786a8a20658a07", "ea0a5067c5f0f50ad4c7bdc80abad3d976604f6fb026b0b3a17a9d84bb9046c9"]
 lml = ["12783c8851bb1b1aacf6d139aa41fb529e1723bff863e71034af07a55bf1e5a3", "58a11170ecb0ce5e4680ad8971f1e353b795d58953217d65c9a56e0d774261d6"]
 more-itertools = ["2b6b9893337bfd9166bee6a62c2b0c9fe7735dcf85948b387ec8cba30e85d8e8", "6703844a52d3588f951883005efcf555e49566a48afd4db4e965d69b883980d3", "a18d870ef2ffca2b8463c0070ad17b5978056f403fb64e3f15fe62a52db21cc0"]
+namedlist = ["190b39ceaf1d6b59999811259e61beb1b26aaa482fb8c95538294d551461c986"]
 openpyxl = ["9239b74faf175dc4276a5fc277655fc53c2f704ded39e680d35e6a39e1913f69"]
 pluggy = ["7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff", "d345c8fe681115900d6da8d048ba67c25df42973bda370783cd58826442dcd7c", "e160a7fcf25762bb60efc7e171d4497ff1d8d2d75a3d0df7a21b76821ecbf5c5"]
 psutil = ["0ff2b16e9045d01edb1dd10d7fbcc184012e37f6cd38029e959f2be9c6223f50", "254adb6a27c888f141d2a6032ae231d8ed4fc5f7583b4c825e5f7d7c78d26d2e", "319e12f6bae4d4d988fbff3bed792953fa3b44c791f085b0a1a230f755671ef7", "529ae235896efb99a6f77653a7138273ab701ec9f0343a1f5030945108dee3c4", "686e5a35fe4c0acc25f3466c32e716f2d498aaae7b7edc03e2305b682226bcf6", "6d981b4d863b20c8ceed98b8ac3d1ca7f96d28707a80845d360fa69c8fc2c44b", "7789885a72aa3075d28d028236eb3f2b84d908f81d38ad41769a6ddc2fd81b7c", "7f4616bcb44a6afda930cfc40215e5e9fa7c6896e683b287c771c937712fbe2f", "7fdb3d02bfd68f508e6745021311a4a4dbfec53fca03721474e985f310e249ba", "a9b85b335b40a528a8e2a6b549592138de8429c6296e7361892958956e6a73cf", "dc85fad15ef98103ecc047a0d81b55bbf5fe1b03313b96e883acc2e2fa87ed5c"]
@@ -279,7 +344,10 @@ py = ["3fd59af7435864e1a243790d322d763925431213b6b8529c6ca71081ace3bbf7", "e31fb
 pyexcel-io = ["5cf5ccf7750ca130640277f31178b6284a4f9f0f0d1d41f28f419b67ce26132b", "d0639851fce803c772ccf0b8ec975f212cb64b6681b63d67e89a2ea238c0afdb"]
 pyexcel-xlsx = ["4b406c0ec64c577a171335ab3bca8acd3bc845b5c99691c3600d11c284091435", "4e1f953427ac5073ee7e42d30e7108f24fde475e58e24822033fdc90a6131291"]
 pytest = ["0453c8676c2bee6feb0434748b068d5510273a916295fd61d306c4f22fbfd752", "4b208614ae6d98195430ad6bde03641c78553acee7c83cec2e85d613c0cd383d"]
+pytest-logger = ["e20040a430f2947fbab97601ee217fbb733a851f0aa237fdfa68a779079968e8", "ee8dde3868c2aaf5f0a9e946f1d0cb3c6062938dc69a7c642274fb5398b64e9e"]
 python-dotenv = ["4965ed170bf51c347a89820e8050655e9c25db3837db6602e906b6d850fad85c", "509736185257111613009974e666568a1b031b028b61b500ef1ab4ee780089d5"]
 requests = ["63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1", "ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a"]
+simplejson = ["067a7177ddfa32e1483ba5169ebea1bc2ea27f224853211ca669325648ca5642", "2b8cb601d9ba0381499db719ccc9dfbb2fbd16013f5ff096b1a68a4775576a04", "2c139daf167b96f21542248f8e0a06596c9b9a7a41c162cc5c9ee9f3833c93cd", "2fc546e6af49fb45b93bbe878dea4c48edc34083729c0abd09981fe55bdf7f91", "354fa32b02885e6dae925f1b5bbf842c333c1e11ea5453ddd67309dc31fdb40a", "37e685986cf6f8144607f90340cff72d36acf654f3653a6c47b84c5c38d00df7", "3af610ee72efbe644e19d5eaad575c73fb83026192114e5f6719f4901097fce2", "3b919fc9cf508f13b929a9b274c40786036b31ad28657819b3b9ba44ba651f50", "3dd289368bbd064974d9a5961101f080e939cbe051e6689a193c99fb6e9ac89b", "491de7acc423e871a814500eb2dcea8aa66c4a4b1b4825d18f756cdf58e370cb", "495511fe5f10ccf4e3ed4fc0c48318f533654db6c47ecbc970b4ed215c791968", "65b41a5cda006cfa7c66eabbcf96aa704a6be2a5856095b9e2fd8c293bad2b46", "6c3258ffff58712818a233b9737fe4be943d306c40cf63d14ddc82ba563f483a", "75e3f0b12c28945c08f54350d91e624f8dd580ab74fd4f1bbea54bc6b0165610", "79b129fe65fdf3765440f7a73edaffc89ae9e7885d4e2adafe6aa37913a00fbb", "b1f329139ba647a9548aa05fb95d046b4a677643070dc2afc05fa2e975d09ca5", "c206f47cbf9f32b573c9885f0ec813d2622976cf5effcf7e472344bc2e020ac1", "d8e238f20bcf70063ee8691d4a72162bcec1f4c38f83c93e6851e72ad545dabb", "ee9625fc8ee164902dfbb0ff932b26df112da9f871c32f0f9c1bcf20c350fe2a", "fb2530b53c28f0d4d84990e945c2ebb470edb469d63e389bf02ff409012fe7c5", "feadb95170e45f439455354904768608e356c5b174ca30b3d11b0e3f24b5c0df"]
 six = ["70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9", "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"]
 urllib3 = ["a68ac5e15e76e7e5dd2b8f94007233e01effe3e50e8daddf69acfd81cb686baf", "b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5"]
+wheel = ["0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c", "80044e51ec5bbf6c894ba0bc48d26a8c20a9ba629f4ca19ea26ecfcf87685f5f"]

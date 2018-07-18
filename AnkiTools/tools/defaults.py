@@ -1,13 +1,12 @@
-import json
-from json.decoder import JSONDecodeError
+import simplejson as json
+from simplejson.decoder import JSONDecodeError
 from collections import OrderedDict
 from collections.abc import Mapping
-
-from AnkiTools.dir import module_path
+import importlib_resources
 
 
 def _default(self, obj):
-    return getattr(obj.__class__, "to_json_object", _default.default)(obj)
+    return getattr(obj.__class__, "_asdict", _default.default)(obj)
 
 
 _default.default = json.JSONEncoder().default
@@ -55,51 +54,28 @@ class ReadOnlyJsonObject(Mapping):
 
 
 # Load auto-generated default values from Anki (collection.anki2)
-with open(module_path('defaults.json')) as f:
-    defaults = json.load(f, object_pairs_hook=OrderedDict)
+defaults = json.loads(importlib_resources.read_text('AnkiTools', 'defaults.json'), object_pairs_hook=OrderedDict)
 
+DEFAULT_ANKI = ReadOnlyJsonObject(defaults)
 DEFAULT_COLLECTION = ReadOnlyJsonObject(defaults['col'])
 DEFAULT_MODEL = ReadOnlyJsonObject(tuple(DEFAULT_COLLECTION['models'].values())[0])
 DEFAULT_TEMPLATE = ReadOnlyJsonObject(DEFAULT_MODEL['tmpls'][0])
+DEFAULT_NOTE = ReadOnlyJsonObject(defaults['notes_sample'][0])
+DEFAULT_CARD = ReadOnlyJsonObject(defaults['cards_sample'][0])
+DEFAULT_DECK = ReadOnlyJsonObject(tuple(DEFAULT_COLLECTION['decks'].values())[0])
 
 # Load author-defined default values
-with open(module_path('defaults_api.json')) as f:
-    defaults = json.load(f, object_pairs_hook=OrderedDict)
+defaults = json.loads(importlib_resources.read_text('AnkiTools', 'defaults_api.json'), object_pairs_hook=OrderedDict)
 
-DEFAULT_API_MODEL_DEFINITION = ReadOnlyJsonObject(defaults['model_definition'])
-
-
-# # Load is_json settings
-# IS_JSON = OrderedDict()
-# with open(module_path('defaults_formatted.json')) as f:
-#     defaults = json.load(f, object_pairs_hook=OrderedDict)
-# for table_name, table_dict in defaults.items():
-#     IS_JSON[table_name] = OrderedDict()
-#     if table_dict is None:
-#         continue
-#
-#     for header_item, v in table_dict.items():
-#         try:
-#             if v['is_json'] is True:
-#                 IS_JSON[table_name][header_item] = True
-#             else:
-#                 IS_JSON[table_name][header_item] = False
-#         except TypeError:
-#             IS_JSON[table_name][header_item] = False
-#
-# IS_JSON = ReadOnlyJsonObject(IS_JSON)
+DEFAULT_API_MODEL_DEFINITION = ReadOnlyJsonObject(defaults["payload"]["minimal"]['model_definition'])
+DEFAULT_API_PREFORMATTED_PAYLOAD = ReadOnlyJsonObject(defaults["payload"]["complete"])
 
 
 def get_constants():
-    constants = OrderedDict()
+    constants = dict()
 
     for k, v in globals().items():
         if k.isupper():
             constants[k] = v
 
     return constants
-
-
-if __name__ == '__main__':
-    pass
-    # print(IS_JSON['col'])

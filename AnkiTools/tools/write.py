@@ -1,4 +1,9 @@
-import json
+import simplejson as json
+import logging
+
+from collections import OrderedDict
+
+debugger_logger = logging.getLogger('debug')
 
 
 def write_anki_table(conn, table_name, new_records, do_commit=True):
@@ -6,35 +11,54 @@ def write_anki_table(conn, table_name, new_records, do_commit=True):
 
     :param sqlite3.Connection conn:
     :param 'notes'|'cards' table_name:
-    :param iter of OrderedDict new_records:
+    :param iter of Record new_records:
     :param bool do_commit:
     :return:
     """
     for new_record in new_records:
-        conn.execute('INSERT INTO {} ({}) VALUES ({})'
-                     .format(table_name,
-                             ','.join(new_record.keys()), ','.join(['?' for _ in range(len(new_record))])),
-                     tuple(new_record.values()))
+        if not isinstance(new_record, (dict, OrderedDict)):
+            new_record = new_record._asdict()
+
+        record = new_record.copy()
+        for key in new_record.keys():
+            record.pop(key)
+
+        if len(record) > 0:
+            query = 'INSERT INTO {} ({}) VALUES ({})'\
+                    .format(table_name,
+                            ','.join(record.keys()), ','.join(['?' for _ in range(len(record))]))
+
+            conn.execute(query, tuple(record.values()))
+        else:
+            debugger_logger.debug("No entry were supplied.")
+
     if do_commit:
         conn.commit()
 
 
-def write_anki_json(conn, json_name, new_dicts, do_commit=True):
+def write_anki_json(conn, json_name, new_records, do_commit=True):
     """
 
     :param sqlite3.Connection conn:
     :param 'models'|'decks' json_name:
-    :param iter of dict new_dicts:
+    :param iter of Record new_records:
     :param bool do_commit:
     :return:
     """
     cursor = conn.execute('SELECT {} FROM col'.format(json_name))
-    json_item = json.loads(cursor.fetchone()[0])
+    response = cursor.fetchone()
 
-    for new_dict in new_dicts:
-        json_item[new_dict['id']] = new_dict
+    previous_items = json.loads(response[0])
 
-    conn.execute('UPDATE col SET {}=?'.format(json_name), (json.dumps(json_item),))
+    for new_record in new_records:
+        assert hasattr(new_record, '_asdict'), \
+            'OrderDict {} is supplied, rather than Record'.format(new_record)
+
+        new_dict = new_record._asdict()
+
+        previous_items[new_dict['id']] = new_dict
+
+    conn.execute('UPDATE col SET {}=?'.format(json_name), (json.dumps(previous_items),))
 
     if do_commit:
         conn.commit()

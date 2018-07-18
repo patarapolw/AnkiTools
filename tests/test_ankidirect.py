@@ -1,25 +1,31 @@
 import pytest
 import os
 import shutil
-from collections import OrderedDict
-import json
+import simplejson as json
 import tempfile
-
-from .files import get_testing_file, get_testing_parameters
+import logging
+import importlib_resources
+from conftest import module_path
 
 from AnkiTools import AnkiDirect
 from AnkiTools.tools.path import get_collection_path
+from AnkiTools.tools.records import MinimalModelRecord, DeckRecord, FormattedNoteRecord, FormattedCardRecord
 
-test_parameters = get_testing_parameters()['test_ankidirect']
+debugger_logger = logging.getLogger('debug')
+
+
+test_parameters = json.loads(importlib_resources.read_text('tests', 'parameters.json'))['test_ankidirect']
 
 if 'CI' in os.environ or os.getenv('ANKI_APP_OPENED', '0') == '1':
-    default_collection = get_testing_file('collection.anki2')
+    default_collection = module_path().joinpath('tests/input/collection.anki2')
 else:
     default_collection = None
 
-collections = [default_collection] + [get_testing_file(col) for col in json.loads(
+collections = [default_collection] + [module_path().joinpath('tests/input').joinpath(col) for col in json.loads(
     os.getenv('ANKI_ADDITIONAL_COLLECTIONS',
               json.dumps(["clean_collection.anki2", "dirty_collection.anki2"])))]
+debugger_logger.debug(collections)
+
 ankidirects = dict()
 for collection in collections:
     ankidirects[collection] = AnkiDirect(anki_database=collection)
@@ -29,18 +35,20 @@ for collection in collections:
 def test_models_dict(collection):
     ankidirect = ankidirects[collection]
 
-    k, v = list(ankidirect.models_dict.items())[0]
+    k, v = next(ankidirect.models_dict_iter)
     assert k.isdigit()
-    assert isinstance(v, dict)
+    assert isinstance(v, MinimalModelRecord)
 
 
 @pytest.mark.parametrize('collection', collections)
 def test_decks_dict(collection):
     ankidirect = ankidirects[collection]
 
-    k, v = list(ankidirect.decks_dict.items())[0]
+    k, v = next(ankidirect.decks_dict_iter)
     assert k.isdigit()
-    assert isinstance(v, dict)
+    assert isinstance(v, DeckRecord)
+
+    debugger_logger.debug(v)
 
 
 @pytest.mark.parametrize('collection', collections)
@@ -48,9 +56,9 @@ def test_notes(collection):
     ankidirect = ankidirects[collection]
 
     try:
-        assert isinstance(next(ankidirect.notes), (dict, OrderedDict))
+        assert isinstance(next(ankidirect.notes), FormattedNoteRecord)
     except StopIteration:
-        pass
+        debugger_logger.debug('There is no Note to test.')
 
 
 @pytest.mark.parametrize('collection', collections)
@@ -58,9 +66,9 @@ def test_cards(collection):
     ankidirect = ankidirects[collection]
 
     try:
-        assert isinstance(next(ankidirect.cards), (dict, OrderedDict))
+        assert isinstance(next(ankidirect.cards), FormattedCardRecord)
     except StopIteration:
-        pass
+        debugger_logger.debug('There is no Card to test.')
 
 
 @pytest.mark.parametrize('collection', collections)
@@ -71,9 +79,9 @@ def test_data(collection):
         try:
             item_id, item_dict = list(v.items())[0]
             assert item_id.isdigit()
-            assert isinstance(item_dict, (dict, OrderedDict))
+            assert hasattr(item_dict, '_fields')
         except IndexError as e:
-            print(e)
+            debugger_logger.debug(e)
 
     assert set(ankidirect.data.keys()) - {'models', 'decks', 'notes', 'cards'} == set()
 
