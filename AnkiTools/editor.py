@@ -3,7 +3,7 @@ from tempfile import mkdtemp, mktemp
 import os
 from zipfile import ZipFile
 
-from .excel.app import AnkiExcelSync
+from AnkiTools.excel import AnkiExcelSync
 
 
 class AnkiFormatEditor:

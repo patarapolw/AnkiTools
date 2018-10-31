@@ -10,6 +10,7 @@
       <w>openpyxl</w>
       <w>qfmt</w>
       <w>tmpl</w>
+      <w>tmpls</w>
       <w>xlsx</w>
     </words>
   </dictionary>

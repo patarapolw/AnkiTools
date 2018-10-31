@@ -66,28 +66,8 @@ DEFAULT_TEMPLATE = ReadOnlyJsonObject(DEFAULT_MODEL['tmpls'][0])
 with open(module_path('defaults_api.json')) as f:
     defaults = json.load(f, object_pairs_hook=OrderedDict)
 
-DEFAULT_API_MODEL_DEFINITION = ReadOnlyJsonObject(defaults['model_definition'])
-
-
-# # Load is_json settings
-# IS_JSON = OrderedDict()
-# with open(module_path('defaults_formatted.json')) as f:
-#     defaults = json.load(f, object_pairs_hook=OrderedDict)
-# for table_name, table_dict in defaults.items():
-#     IS_JSON[table_name] = OrderedDict()
-#     if table_dict is None:
-#         continue
-#
-#     for header_item, v in table_dict.items():
-#         try:
-#             if v['is_json'] is True:
-#                 IS_JSON[table_name][header_item] = True
-#             else:
-#                 IS_JSON[table_name][header_item] = False
-#         except TypeError:
-#             IS_JSON[table_name][header_item] = False
-#
-# IS_JSON = ReadOnlyJsonObject(IS_JSON)
+DEFAULT_API_MODEL_DEFINITION = ReadOnlyJsonObject(defaults["payload"]["minimal"]['model_definition'])
+DEFAULT_API_PREFORMATTED_PAYLOAD = ReadOnlyJsonObject(defaults["payload"]["complete"])
 
 
 def get_constants():

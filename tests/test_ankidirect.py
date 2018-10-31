@@ -1,23 +1,24 @@
 import pytest
-import os
 import shutil
 from collections import OrderedDict
 import json
 import tempfile
+import os
+from pathlib import Path
 
-from .files import get_testing_file, get_testing_parameters
+from .config import PARAMS
 
 from AnkiTools import AnkiDirect
 from AnkiTools.tools.path import get_collection_path
 
-test_parameters = get_testing_parameters()['test_ankidirect']
+test_parameters = PARAMS['test_ankidirect']
 
 if 'CI' in os.environ or os.getenv('ANKI_APP_OPENED', '0') == '1':
-    default_collection = get_testing_file('collection.anki2')
+    default_collection = Path('tests/input/collection.anki2')
 else:
     default_collection = None
 
-collections = [default_collection] + [get_testing_file(col) for col in json.loads(
+collections = [default_collection] + [Path('tests/input').joinpath(col) for col in json.loads(
     os.getenv('ANKI_ADDITIONAL_COLLECTIONS',
               json.dumps(["clean_collection.anki2", "dirty_collection.anki2"])))]
 ankidirects = dict()

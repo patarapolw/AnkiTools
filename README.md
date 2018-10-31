@@ -5,6 +5,8 @@
 [![PyPI license](https://img.shields.io/pypi/l/AnkiTools.svg)](https://pypi.python.org/pypi/AnkiTools/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/AnkiTools.svg)](https://pypi.python.org/pypi/AnkiTools/)
 
+> Please my new project, [ankisync](https://github.com/patarapolw/ankisync), which will be active instead of this one.
+
 An Anki *.apkg and collection.anki2 reader and editor to work with in Python. Also included a module on [AnkiConnect](https://github.com/FooSoft/anki-connect).
 
 I also created a new sync system called AnkiDirect.
